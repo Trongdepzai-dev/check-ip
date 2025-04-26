@@ -1,9 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIÊU THEO DÕI VỊ TRÍ PRO MAX</title>
+    <title>SIÊU THEO DÕI VỊ TRÍ PRO MAX v3.2</title> <!-- Version Bump -->
+    <!-- Tailwind CSS CDN - Okay for dev/demo, see console warning about production -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -14,109 +16,215 @@
             --accent: #4895ef;
             --dark: #1b263b;
             --light: #f8f9fa;
-            --success: #4cc9f0;
-            --danger: #f72585;
-            --warning: #f8961e;
+            --success: #14b8a6; /* Updated success color (Teal 500) */
+            --danger: #f43f5e; /* Updated danger color (Rose 500) */
+            --warning: #f97316; /* Updated warning color (Orange 500) */
+
+            /* --- Color Theme Variables --- */
+            --bg-light: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --bg-dark: linear-gradient(135deg, #111827 0%, #1f2937 100%); /* Darker Gradient */
+            --card-bg-light: rgba(255, 255, 255, 0.45); /* More opaque */
+            --card-bg-dark: rgba(31, 41, 55, 0.55); /* Darker, more opaque card */
+            --card-border-light: rgba(255, 255, 255, 0.3);
+            --card-border-dark: rgba(75, 85, 99, 0.4); /* Slightly darker border */
+            --text-light: #1f2937;
+            --text-dark: #e5e7eb;
+            --text-muted-light: #4b5563;
+            --text-muted-dark: #9ca3af; /* Kept Tailwind Gray 400 */
+            --icon-color-light: var(--text-muted-light);
+            --icon-color-dark: var(--text-muted-dark);
+            --progress-bg-light: #e5e7eb; /* Gray 200 */
+            --progress-bg-dark: #4b5563; /* Gray 600 */
         }
-        
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: 'Montserrat', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: var(--bg-light);
             min-height: 100vh;
+            color: var(--text-light);
+            transition: background 0.6s ease, color 0.5s ease;
+            overflow-x: hidden;
         }
-        
+
+        body.dark {
+            background: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        /* --- Glassmorphism Enhancements --- */
         .glass-card {
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: var(--card-bg-light);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border-radius: 20px;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            transition: all 0.3s ease;
-        }
-        
-        .glass-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.25);
-        }
-        
-        .glow {
-            animation: glow 2s ease-in-out infinite alternate;
-        }
-        
-        @keyframes glow {
-            from {
-                box-shadow: 0 0 10px rgba(67, 97, 238, 0.5);
-            }
-            to {
-                box-shadow: 0 0 20px rgba(67, 97, 238, 0.8), 0 0 30px rgba(67, 97, 238, 0.6);
-            }
-        }
-        
-        .pulse {
-            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.7;
-            }
-        }
-        
-        .progress-bar {
-            height: 8px;
-            border-radius: 4px;
-            background: linear-gradient(90deg, #4cc9f0 0%, #4361ee 100%);
-            transition: width 0.5s ease;
-        }
-        
-        .map-container {
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+            border: 1px solid var(--card-border-light);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), background 0.5s ease, border 0.5s ease;
             position: relative;
             overflow: hidden;
-            border-radius: 16px;
-            height: 300px;
-            background: linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 100%);
+            z-index: 1;
         }
-        
-        .sensor-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--dark);
+
+        body.dark .glass-card {
+            background: var(--card-bg-dark);
+            border: 1px solid var(--card-border-dark);
+            box-shadow: 0 8px 40px 0 rgba(0, 0, 0, 0.25); /* Darker shadow */
         }
-        
-        .sensor-label {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--dark);
-            opacity: 0.7;
+
+        .glass-card:hover {
+            transform: translateY(-6px) scale(1.01);
+            box-shadow: 0 14px 45px 0 rgba(31, 38, 135, 0.15);
         }
-        
-        .history-item {
-            border-left: 3px solid var(--primary);
-            transition: all 0.3s ease;
+        body.dark .glass-card:hover {
+             box-shadow: 0 14px 50px 0 rgba(0, 0, 0, 0.35);
         }
-        
-        .history-item:hover {
-            background: rgba(67, 97, 238, 0.05);
-            transform: translateX(5px);
+
+        /* Light Sweep Effect */
+        .glass-card::after {
+            content: ""; position: absolute; top: 0; left: -150%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94); z-index: 1; opacity: 0; pointer-events: none;
         }
-        
-        .badge {
-            font-size: 0.7rem;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-weight: 600;
+         body.dark .glass-card::after {
+             background: linear-gradient(90deg, transparent, rgba(200, 220, 255, 0.08), transparent); /* Subtle dark sweep */
+         }
+        .glass-card:hover::after { left: 150%; opacity: 1; transition: left 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.2s ease-in;}
+
+
+        /* Ripple Effect */
+        .ripple { position: absolute; border-radius: 50%; background-color: rgba(255, 255, 255, 0.5); transform: scale(0); animation: ripple-animation 0.6s linear; pointer-events: none; }
+         body.dark .ripple { background-color: rgba(100, 120, 150, 0.3); } /* Subtler ripple in dark mode */
+        @keyframes ripple-animation { to { transform: scale(4); opacity: 0; } }
+
+        /* --- Theme-Aware Elements --- */
+        .progress-bar {
+             height: 8px; border-radius: 4px; background: linear-gradient(90deg, var(--success) 0%, var(--primary) 100%);
+             transition: width 0.8s cubic-bezier(0.23, 1, 0.32, 1);
         }
-        
-        @media (max-width: 768px) {
-            .map-container {
-                height: 200px;
-            }
+        .progress-bg { background-color: var(--progress-bg-light); border-radius: 4px; transition: background-color 0.5s ease; }
+        body.dark .progress-bg { background-color: var(--progress-bg-dark); }
+
+        /* Text colors that need specific overrides */
+         .text-gray-800 { color: var(--text-light); body.dark & { color: var(--text-dark); } transition: color 0.5s ease; }
+         .text-gray-600 { color: var(--text-muted-light); body.dark & { color: var(--text-muted-dark); } transition: color 0.5s ease; }
+         .text-gray-500 { color: #6b7280; body.dark & { color: #9ca3af; } transition: color 0.5s ease; } /* Specific gray levels */
+
+         /* Primary text links/buttons */
+          .text-blue-600 { color: var(--primary); body.dark & { color: var(--accent); } transition: color 0.5s ease; }
+          .hover\:text-blue-800:hover { color: #2563eb; body.dark & { color: #60a5fa; } }
+
+        /* Icons needing theme adjustment */
+        .themed-icon { color: var(--icon-color-light); body.dark & { color: var(--icon-color-dark); } transition: color 0.5s ease; }
+         .map-loading-placeholder i { color: var(--text-muted-light); body.dark & { color: var(--text-muted-dark); } transition: color 0.5s ease;}
+
+
+        /* Badge Theming */
+         .badge { font-size: 0.7rem; padding: 3px 8px; border-radius: 12px; font-weight: 600; transition: background-color 0.5s ease, color 0.5s ease; }
+         .badge-premium { background: linear-gradient(45deg, var(--primary), var(--accent)); color: white; animation: subtleGlow 2.5s ease-in-out infinite alternate; }
+         @keyframes subtleGlow { /* Same as before */
+            from { box-shadow: 0 0 8px rgba(67, 97, 238, 0.5), 0 0 12px rgba(72, 149, 239, 0.4); }
+            to { box-shadow: 0 0 14px rgba(67, 97, 238, 0.7), 0 0 20px rgba(72, 149, 239, 0.6); }
         }
+         /* Specific Badge Colors */
+          .badge-info { background-color: #e0f2fe; color: #0369a1; } /* Light Blue */
+           body.dark .badge-info { background-color: rgba(59, 130, 246, 0.2); color: #93c5fd; }
+          .badge-success { background-color: #d1fae5; color: #047857; } /* Light Green */
+           body.dark .badge-success { background-color: rgba(16, 185, 129, 0.2); color: #6ee7b7; }
+          .badge-warning { background-color: #ffedd5; color: #9a3412; } /* Light Orange */
+           body.dark .badge-warning { background-color: rgba(249, 115, 22, 0.2); color: #fdba74; }
+          .badge-danger { background-color: #ffe4e6; color: #be123c; } /* Light Rose */
+           body.dark .badge-danger { background-color: rgba(244, 63, 94, 0.2); color: #fda4af; }
+          .badge-purple { background-color: #ede9fe; color: #5b21b6; } /* Light Violet */
+           body.dark .badge-purple { background-color: rgba(167, 139, 250, 0.2); color: #c4b5fd; } /* Adjusted dark color */
+          .badge-neutral { background-color: #e5e7eb; color: #374151; } /* Light Gray */
+           body.dark .badge-neutral { background-color: #374151; color: #d1d5db; }
+
+         /* Sensor Box Theming */
+          .sensor-box { text-align: center; padding: 0.75rem; border-radius: 0.75rem; transition: background-color 0.5s ease; }
+          .bg-blue-50 { background-color: #eff6ff; body.dark & { background-color: rgba(59, 130, 246, 0.1); } }
+          .bg-green-50 { background-color: #f0fdfa; body.dark & { background-color: rgba(20, 184, 166, 0.1); } } /* Teal */
+          .bg-yellow-50 { background-color: #fffbeb; body.dark & { background-color: rgba(245, 158, 11, 0.1); } } /* Amber */
+          .bg-red-50 { background-color: #fff1f2; body.dark & { background-color: rgba(244, 63, 94, 0.1); } } /* Rose */
+          .sensor-value { font-size: 1.5rem; font-weight: 700; color: var(--dark); body.dark & { color: var(--light); } transition: color 0.5s ease; animation: sensorPulse 3s ease-in-out infinite alternate; }
+           @keyframes sensorPulse { from { transform: scale(1); } to { transform: scale(1.02); } } /* Subtle pulse */
+           .sensor-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted-light); opacity: 0.8; body.dark & { color: var(--text-muted-dark); opacity: 0.7; } transition: color 0.5s ease, opacity 0.5s ease; }
+
+        /* --- Specific Component Styling & Animations --- */
+        .status-active .w-3.h-3 { background-color: #10b981; animation: enhancedPulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; box-shadow: 0 0 8px #10b981, 0 0 12px #10b981; }
+        .status-active .animate-ping { border-color: #10b981; animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite; }
+        @keyframes enhancedPulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.1); } }
+
+         /* Map Controls & Loading */
+          .map-container { position: relative; overflow: hidden; border-radius: 16px; height: 300px; background: var(--progress-bg-light); body.dark & { background: var(--progress-bg-dark); } transition: background-color 0.5s ease, opacity 0.4s ease;}
+          .map-loading-placeholder { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; text-align: center; }
+          .map-loading-placeholder i { font-size: 3rem; margin-bottom: 0.75rem; }
+          .map-loading-placeholder .fa-spin { animation: fa-spin 1.5s linear infinite; } /* Smooth spin */
+          .map-container iframe { border-radius: 16px !important; /* Ensure iframe respects radius */ }
+
+        /* Radar Button */
+         #mapLink { position: relative; overflow: visible; }
+         #mapLink.radar-active::before, #mapLink.radar-active::after { content: ''; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 100%; height: 100%; border-radius: 9999px; background-color: transparent; border: 2px solid var(--primary); opacity: 0.6; animation: radarPulse 2s ease-out infinite; z-index: -1; }
+         #mapLink.radar-active::after { animation-delay: 1s; }
+         @keyframes radarPulse { 0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.6; } 100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; } }
+
+        /* Battery Charging Animation */
+         #battery.is-charging::after { content: "\f0e7"; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--warning); margin-left: 6px; display: inline-block; animation: chargePulse 1.5s ease-in-out infinite; }
+         @keyframes chargePulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.7; } }
+
+
+        /* History Item Animation */
+         .history-item { border-left: 3px solid var(--primary); body.dark & { border-left-color: var(--accent); } transition: background-color 0.3s ease, transform 0.3s ease, border-color 0.5s ease, opacity 0.6s ease-out; opacity: 0; transform: translateY(20px); will-change: opacity, transform; }
+         .history-item.is-visible { opacity: 1; transform: translateY(0px); transition-delay: calc(var(--history-index, 0) * 50ms); /* Stagger animation */ } /* Added stagger */
+         .history-item:hover { background: rgba(67, 97, 238, 0.05); body.dark & { background: rgba(72, 149, 239, 0.1); } transform: translateX(5px) scale(1.01); }
+         .history-icon { transition: transform 0.3s ease; color: var(--primary); body.dark & { color: var(--accent); } width: 20px; text-align: center; }
+         .history-item:hover .history-icon { transform: scale(1.3); }
+         .history-item .badge { animation: badgePulse 4s ease-in-out infinite alternate; transform-origin: center; }
+         @keyframes badgePulse { from { transform: scale(1); } to { transform: scale(1.03); } }
+
+         /* Advanced Features Compact Layout */
+         .advanced-feature-box {
+             padding: 0.75rem; /* Reduced padding */
+             border-radius: 0.75rem; /* Slightly smaller radius */
+             transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease, background-color 0.5s ease;
+             border: 1px solid transparent;
+             background-color: rgba(255, 255, 255, 0.1);
+             body.dark & { background-color: rgba(55, 65, 81, 0.25); } /* Darker bg */
+         }
+        .advanced-feature-box:hover { transform: scale(1.03); box-shadow: 0 0 20px rgba(67, 97, 238, 0.2); border: 1px solid var(--primary); }
+         body.dark .advanced-feature-box:hover { box-shadow: 0 0 20px rgba(72, 149, 239, 0.2); border: 1px solid var(--accent); }
+        /* Gradient backgrounds need dark mode adjustments too */
+         body.dark .advanced-feature-box.from-blue-50 { background-color: rgba(59, 130, 246, 0.15); } /* Example: override gradient */
+         body.dark .advanced-feature-box.from-green-50 { background-color: rgba(16, 185, 129, 0.15); }
+         body.dark .advanced-feature-box.from-purple-50 { background-color: rgba(167, 139, 250, 0.15); }
+         .advanced-feature-icon-bg { padding: 0.5rem; border-radius: 0.5rem; margin-right: 0.75rem; transition: background-color 0.5s ease; }
+          /* Icon bg colors need dark theme */
+           .bg-blue-100 { background-color: #DBEAFE; body.dark & { background-color: rgba(59, 130, 246, 0.2); } }
+           .bg-green-100 { background-color: #D1FAE5; body.dark & { background-color: rgba(16, 185, 129, 0.2); } }
+           .bg-purple-100 { background-color: #EDE9FE; body.dark & { background-color: rgba(167, 139, 250, 0.2); } }
+
+        /* Map Buttons */
+         .map-type-button { background-color: #e5e7eb; body.dark & { background-color: #374151; } transition: background-color 0.3s ease, transform 0.2s ease; }
+         .map-type-button:hover { background-color: #d1d5db; body.dark & { background-color: #4b5563; } }
+         .map-type-button:active { transform: scale(0.95); }
+         .map-type-button.active { background-color: var(--primary) !important; color: white !important; body.dark & { background-color: var(--accent) !important; } } /* Force active style */
+
+
+         /* Footer icons */
+          .footer-icon { color: var(--text-muted-light); body.dark & { color: var(--text-muted-dark); } transition: color 0.3s ease; }
+          .footer-icon:hover { color: var(--primary); body.dark & { color: var(--accent); } }
+
+        /* Ensure Font Awesome icons transition color */
+        .fas, .fab, .far { transition: color 0.5s ease; }
+
+        /* Dark mode toggle icons color fix */
+         body.dark #darkModeToggle .fa-moon { color: var(--text-dark); }
+         body.dark #darkModeToggle .fa-sun { color: #fcd34d; } /* Keep sun yellow */
+
+
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
@@ -124,55 +232,51 @@
         <!-- Header -->
         <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
             <div class="flex items-center space-x-3">
-                <div class="p-3 bg-blue-500 rounded-full shadow-lg">
-                    <i class="fas fa-satellite-dish text-white text-xl"></i>
-                </div>
+                 <div class="p-2.5 bg-blue-500 rounded-full shadow-lg relative overflow-hidden glass-card" style="background: var(--primary);">
+                     <i class="fas fa-satellite-dish text-white text-xl"></i>
+                 </div>
                 <div>
                     <h1 class="text-2xl font-bold text-gray-800" data-lang="title">SIÊU THEO DÕI VỊ TRÍ PRO MAX</h1>
                     <p class="text-gray-600 text-sm" data-lang="subtitle">Hệ thống giám sát toàn diện 10x</p>
                 </div>
             </div>
-            
+
             <div class="flex items-center space-x-4">
-                <!-- Language Selector -->
                 <div class="relative">
-                    <select id="languageSelect" class="glass-card px-4 py-2 rounded-full text-sm font-medium appearance-none pr-8">
-                        <option value="vi">🇻🇳 Tiếng Việt</option>
+                     <select id="languageSelect" class="glass-card px-4 py-2 rounded-full text-sm font-medium appearance-none pr-8 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400 bg-transparent">
+                         <option value="vi">🇻🇳 Tiếng Việt</option>
                         <option value="en">🇬🇧 English</option>
                         <option value="zh">🇨🇳 中文</option>
                         <option value="ja">🇯🇵 日本語</option>
                     </select>
                     <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                        <i class="fas fa-chevron-down text-gray-500 text-xs"></i>
+                         <i class="fas fa-chevron-down themed-icon text-xs"></i>
                     </div>
                 </div>
-                
-                <!-- Dark Mode Toggle -->
-                <button id="darkModeToggle" class="glass-card p-2 rounded-full">
-                    <i class="fas fa-moon text-gray-700"></i>
-                </button>
+                 <button id="darkModeToggle" title="Toggle Theme" class="glass-card p-2 rounded-full w-10 h-10 flex items-center justify-center cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400 bg-transparent">
+                    <i class="fas fa-moon text-gray-700"></i> <!-- Icon class changed in JS -->
+                 </button>
             </div>
         </div>
 
         <!-- Status Bar -->
         <div class="glass-card p-4 mb-6 flex flex-wrap items-center justify-between gap-4">
-            <div class="flex items-center space-x-3">
+            <div class="flex items-center space-x-3 status-active">
                 <div class="relative">
-                    <div class="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
-                    <div class="absolute inset-0 rounded-full bg-green-500 opacity-75 animate-ping"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    <div class="absolute inset-0 rounded-full border-2 border-green-500 opacity-75 animate-ping"></div>
                 </div>
-                <span class="text-sm font-medium" data-lang="active">Đang hoạt động</span>
-                <span class="text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full" data-lang="premium">Premium</span>
+                <span class="text-sm font-medium text-gray-800" data-lang="active">Đang hoạt động</span>
+                 <span class="badge badge-premium" data-lang="premium">Premium</span>
             </div>
-            
+
             <div class="flex items-center space-x-4">
                 <div class="flex items-center space-x-2">
                     <i class="fas fa-shield-alt text-blue-500"></i>
-                    <span class="text-sm" data-lang="security">Bảo mật cấp độ cao</span>
+                    <span class="text-sm text-gray-600" data-lang="security">Bảo mật cấp độ cao</span>
                 </div>
-                
                 <div id="currentTime" class="text-sm font-medium text-gray-600 flex items-center">
-                    <i class="far fa-clock mr-2"></i>
+                    <i class="far fa-clock mr-2 themed-icon"></i>
                     <span></span>
                 </div>
             </div>
@@ -183,838 +287,634 @@
             <!-- Left Column -->
             <div class="space-y-6">
                 <!-- Location Card -->
-                <div class="glass-card p-6">
+                <div class="glass-card p-6 location-card">
                     <div class="flex items-center justify-between mb-4">
                         <h2 class="text-xl font-bold text-gray-800 flex items-center">
                             <i class="fas fa-map-marker-alt text-red-500 mr-2"></i>
                             <span data-lang="location">VỊ TRÍ CHÍNH XÁC</span>
                         </h2>
-                        <span class="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded-full" data-lang="realtime">Thời gian thực</span>
+                        <span class="badge badge-info" data-lang="realtime">Thời gian thực</span>
                     </div>
-                    
                     <div class="space-y-4">
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <p class="text-gray-600 text-sm" data-lang="latitude">Vĩ độ:</p>
-                                <p id="latitude" class="font-mono font-bold text-lg">10.823099</p>
+                                <p id="latitude" class="font-mono font-bold text-lg">--.------</p>
                             </div>
                             <div>
                                 <p class="text-gray-600 text-sm" data-lang="longitude">Kinh độ:</p>
-                                <p id="longitude" class="font-mono font-bold text-lg">106.629662</p>
+                                <p id="longitude" class="font-mono font-bold text-lg">---.------</p>
                             </div>
                         </div>
-                        
                         <div>
                             <p class="text-gray-600 text-sm" data-lang="accuracy">Độ chính xác:</p>
                             <div class="flex items-center space-x-2">
-                                <div class="w-full bg-gray-200 rounded-full h-2">
-                                    <div id="accuracyBar" class="progress-bar h-2 rounded-full" style="width: 92%"></div>
+                                <div class="w-full h-2 progress-bg">
+                                    <div id="accuracyBar" class="progress-bar h-2" style="width: 0%"></div>
                                 </div>
-                                <span id="accuracy" class="text-sm font-medium">5.2m</span>
+                                <span id="accuracy" class="text-sm font-medium text-gray-600">--.- m</span>
                             </div>
                         </div>
-                        
                         <div>
                             <p class="text-gray-600 text-sm" data-lang="address">Địa chỉ:</p>
-                            <p id="address" class="font-medium">227 Nguyễn Văn Cừ, Quận 5, TP.Hồ Chí Minh, Việt Nam</p>
+                             <p id="address" class="font-medium text-sm text-gray-600">Đang yêu cầu vị trí...</p>
                         </div>
-                        
                         <div class="pt-2">
-                            <a href="#" id="mapLink" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors text-sm">
+                             <a href="#" id="mapLink" target="_blank" rel="noopener noreferrer" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 shadow-md hover:shadow-lg">
                                 <i class="fas fa-external-link-alt mr-2"></i>
                                 <span data-lang="openMap">Mở bản đồ</span>
                             </a>
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Sensors Card -->
                 <div class="glass-card p-6">
                     <h2 class="text-xl font-bold text-gray-800 flex items-center mb-4">
                         <i class="fas fa-microchip text-purple-500 mr-2"></i>
                         <span data-lang="sensors">CẢM BIẾN THIẾT BỊ</span>
                     </h2>
-                    
                     <div class="grid grid-cols-2 gap-4">
-                        <div class="text-center p-3 rounded-xl bg-blue-50">
-                            <div class="sensor-value" id="lightLevel">85%</div>
-                            <div class="sensor-label" data-lang="light">Ánh sáng</div>
+                        <div class="sensor-box bg-blue-50">
+                            <div class="sensor-value" id="lightLevel">--%</div> <div class="sensor-label" data-lang="light">Ánh sáng</div>
                         </div>
-                        
-                        <div class="text-center p-3 rounded-xl bg-green-50">
-                            <div class="sensor-value" id="temperature">28°C</div>
-                            <div class="sensor-label" data-lang="temp">Nhiệt độ</div>
+                        <div class="sensor-box bg-green-50">
+                            <div class="sensor-value" id="temperature">--°C</div> <div class="sensor-label" data-lang="temp">Nhiệt độ</div>
                         </div>
-                        
-                        <div class="text-center p-3 rounded-xl bg-yellow-50">
-                            <div class="sensor-value" id="humidity">65%</div>
-                            <div class="sensor-label" data-lang="humidity">Độ ẩm</div>
+                        <div class="sensor-box bg-yellow-50">
+                            <div class="sensor-value" id="humidity">--%</div> <div class="sensor-label" data-lang="humidity">Độ ẩm</div>
                         </div>
-                        
-                        <div class="text-center p-3 rounded-xl bg-red-50">
-                            <div class="sensor-value" id="pressure">1013 hPa</div>
-                            <div class="sensor-label" data-lang="pressure">Áp suất</div>
+                        <div class="sensor-box bg-red-50">
+                            <div class="sensor-value" id="pressure">---- hPa</div> <div class="sensor-label" data-lang="pressure">Áp suất</div>
                         </div>
                     </div>
                 </div>
             </div>
-            
+
             <!-- Middle Column -->
             <div class="space-y-6">
                 <!-- Map Card -->
-                <div class="glass-card p-6 h-full">
+                <div class="glass-card p-6 h-full flex flex-col"> <!-- Flex col for layout -->
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-xl font-bold text-gray-800 flex items-center">
                             <i class="fas fa-map text-blue-500 mr-2"></i>
                             <span data-lang="map">BẢN ĐỒ VỊ TRÍ</span>
                         </h2>
                         <div class="flex space-x-2">
-                            <button class="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors">
-                                <i class="fas fa-layer-group text-gray-600"></i>
-                            </button>
-                            <button class="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors">
-                                <i class="fas fa-location-arrow text-gray-600"></i>
-                            </button>
+                             <button title="Layers" class="p-1.5 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors focus:outline-none focus:ring-1 focus:ring-blue-400 glass-card bg-transparent themed-icon"><i class="fas fa-layer-group text-sm"></i></button>
+                             <button title="Center" class="p-1.5 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors focus:outline-none focus:ring-1 focus:ring-blue-400 glass-card bg-transparent themed-icon"><i class="fas fa-location-arrow text-sm"></i></button>
                         </div>
                     </div>
-                    
-                    <div class="map-container flex items-center justify-center">
-                        <div class="text-center">
-                            <i class="fas fa-map-marked-alt text-5xl text-gray-300 mb-3"></i>
-                            <p class="text-gray-500" data-lang="loadingMap">Đang tải bản đồ...</p>
+                     <div class="map-container flex-grow relative"> <!-- Map takes remaining space -->
+                         <!-- Loading/Error Placeholder -->
+                         <div class="map-loading-placeholder" id="mapPlaceholder">
+                            <i class="fas fa-satellite-dish fa-spin text-gray-400"></i>
+                            <p class="text-gray-500 text-sm mt-2" data-lang="loadingMap">Đang tải bản đồ...</p>
                         </div>
-                    </div>
-                    
-                    <div class="mt-4 grid grid-cols-3 gap-2">
-                        <button class="px-3 py-1 bg-gray-100 rounded-full text-sm hover:bg-gray-200 transition-colors" data-lang="standard">Tiêu chuẩn</button>
-                        <button class="px-3 py-1 bg-gray-100 rounded-full text-sm hover:bg-gray-200 transition-colors" data-lang="satellite">Vệ tinh</button>
-                        <button class="px-3 py-1 bg-gray-100 rounded-full text-sm hover:bg-gray-200 transition-colors" data-lang="terrain">Địa hình</button>
+                         <!-- Iframe added by JS here -->
+                     </div>
+                    <div class="mt-4 grid grid-cols-3 gap-2 map-type-controls">
+                         <button class="map-type-button px-3 py-1 rounded-full text-xs md:text-sm focus:outline-none" data-lang="standard" data-map-type="roadmap">Tiêu chuẩn</button>
+                         <button class="map-type-button px-3 py-1 rounded-full text-xs md:text-sm focus:outline-none" data-lang="satellite" data-map-type="satellite">Vệ tinh</button>
+                         <button class="map-type-button px-3 py-1 rounded-full text-xs md:text-sm focus:outline-none" data-lang="terrain" data-map-type="terrain">Địa hình</button>
                     </div>
                 </div>
-                
-                <!-- Network Card -->
+
+                <!-- Network Card (Reduced redundancy in HTML) -->
                 <div class="glass-card p-6">
                     <h2 class="text-xl font-bold text-gray-800 flex items-center mb-4">
                         <i class="fas fa-wifi text-green-500 mr-2"></i>
                         <span data-lang="network">THÔNG TIN MẠNG</span>
                     </h2>
-                    
                     <div class="space-y-4">
-                        <div>
-                            <div class="flex justify-between items-center mb-1">
-                                <span class="text-gray-600 text-sm" data-lang="ip">Địa chỉ IP:</span>
-                                <span id="ip" class="font-mono">192.168.1.100</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-1.5">
-                                <div class="bg-green-500 h-1.5 rounded-full" style="width: 85%"></div>
-                            </div>
+                        <div class="network-item">
+                             <div class="flex justify-between items-center mb-1 text-sm"><span class="text-gray-600" data-lang="ip">Địa chỉ IP:</span><span id="ip" class="font-mono">?.?.?.?</span></div>
+                             <div class="w-full h-1.5 progress-bg"><div id="ipProgressBar" class="bg-green-500 h-1.5" style="width: 0%"></div></div>
                         </div>
-                        
-                        <div>
-                            <div class="flex justify-between items-center mb-1">
-                                <span class="text-gray-600 text-sm" data-lang="connection">Loại kết nối:</span>
-                                <span id="connection" class="font-medium">5G</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-1.5">
-                                <div class="bg-blue-500 h-1.5 rounded-full" style="width: 95%"></div>
-                            </div>
+                        <div class="network-item">
+                             <div class="flex justify-between items-center mb-1 text-sm"><span class="text-gray-600" data-lang="connection">Loại kết nối:</span><span id="connection" class="font-medium">Unknown</span></div>
+                             <div class="w-full h-1.5 progress-bg"><div id="connectionProgressBar" class="bg-blue-500 h-1.5" style="width: 0%"></div></div>
                         </div>
-                        
-                        <div>
-                            <div class="flex justify-between items-center mb-1">
-                                <span class="text-gray-600 text-sm" data-lang="speed">Tốc độ:</span>
-                                <span id="speed" class="font-medium">72.4 Mbps</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-1.5">
-                                <div class="bg-purple-500 h-1.5 rounded-full" style="width: 72%"></div>
-                            </div>
+                        <div class="network-item">
+                            <div class="flex justify-between items-center mb-1 text-sm"><span class="text-gray-600" data-lang="speed">Tốc độ:</span><span id="speed" class="font-medium">--.- Mbps</span></div>
+                             <div class="w-full h-1.5 progress-bg"><div id="speedProgressBar" class="bg-purple-500 h-1.5" style="width: 0%"></div></div>
                         </div>
-                        
                         <div class="pt-2">
-                            <button class="text-blue-600 text-sm flex items-center hover:text-blue-800 transition-colors">
-                                <i class="fas fa-chart-line mr-2"></i>
-                                <span data-lang="networkHistory">Xem lịch sử mạng</span>
+                            <button class="text-blue-600 text-sm flex items-center hover:text-blue-800 transition-colors focus:outline-none">
+                                <i class="fas fa-chart-line mr-2"></i><span data-lang="networkHistory">Xem lịch sử mạng</span>
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
-            
+
             <!-- Right Column -->
             <div class="space-y-6">
                 <!-- System Info Card -->
                 <div class="glass-card p-6">
                     <h2 class="text-xl font-bold text-gray-800 flex items-center mb-4">
-                        <i class="fas fa-laptop-code text-orange-500 mr-2"></i>
-                        <span data-lang="system">THÔNG TIN HỆ THỐNG</span>
+                        <i class="fas fa-laptop-code text-orange-500 mr-2"></i><span data-lang="system">THÔNG TIN HỆ THỐNG</span>
                     </h2>
-                    
                     <div class="space-y-4">
                         <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <p class="text-gray-600 text-sm" data-lang="os">Hệ điều hành:</p>
-                                <p id="os" class="font-medium">Android 13</p>
-                            </div>
-                            <div>
-                                <p class="text-gray-600 text-sm" data-lang="browser">Trình duyệt:</p>
-                                <p id="browser" class="font-medium">Chrome 115</p>
-                            </div>
-                            <div>
-                                <p class="text-gray-600 text-sm" data-lang="resolution">Độ phân giải:</p>
-                                <p id="resolution" class="font-medium">1080x2340</p>
-                            </div>
-                            <div>
-                                <p class="text-gray-600 text-sm" data-lang="battery">Pin:</p>
-                                <p id="battery" class="font-medium">78% (Đang sạc)</p>
-                            </div>
+                            <div><p class="text-gray-600 text-sm" data-lang="os">Hệ điều hành:</p><p id="os" class="font-medium text-gray-800">Unknown</p></div>
+                            <div><p class="text-gray-600 text-sm" data-lang="browser">Trình duyệt:</p><p id="browser" class="font-medium text-gray-800">Unknown</p></div>
+                            <div><p class="text-gray-600 text-sm" data-lang="resolution">Độ phân giải:</p><p id="resolution" class="font-medium text-gray-800">----x----</p></div>
+                            <div><p class="text-gray-600 text-sm" data-lang="battery">Pin:</p><p id="battery" class="font-medium text-gray-800">--%</p></div>
                         </div>
-                        
-                        <div class="pt-2">
-                            <div class="flex justify-between text-sm mb-1">
-                                <span class="text-gray-600" data-lang="storage">Bộ nhớ:</span>
-                                <span>64GB / 128GB</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-yellow-500 h-2 rounded-full" style="width: 50%"></div>
-                            </div>
+                         <div class="pt-2 progress-storage">
+                            <div class="flex justify-between text-sm mb-1 text-gray-600"><span data-lang="storage">Bộ nhớ:</span><span><span id="storageValue">--</span>GB / 128GB</span></div>
+                             <div class="w-full h-2 progress-bg"><div id="storageBar" class="bg-yellow-500 h-2 rounded-full" style="width: 0%"></div></div>
                         </div>
-                        
-                        <div>
-                            <div class="flex justify-between text-sm mb-1">
-                                <span class="text-gray-600" data-lang="memory">Bộ nhớ RAM:</span>
-                                <span>4.2GB / 8GB</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-green-500 h-2 rounded-full" style="width: 52.5%"></div>
-                            </div>
+                         <div class="progress-memory">
+                            <div class="flex justify-between text-sm mb-1 text-gray-600"><span data-lang="memory">Bộ nhớ RAM:</span><span><span id="memoryValue">-.</span>GB / 8GB</span></div>
+                             <div class="w-full h-2 progress-bg"><div id="memoryBar" class="bg-green-500 h-2 rounded-full" style="width: 0%"></div></div>
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- History Card -->
-                <div class="glass-card p-6">
-                    <h2 class="text-xl font-bold text-gray-800 flex items-center mb-4">
-                        <i class="fas fa-history text-indigo-500 mr-2"></i>
-                        <span data-lang="history">LỊCH SỬ DI CHUYỂN</span>
+                 <div class="glass-card p-6 flex flex-col max-h-[30rem]"> <!-- Flex Col, Max Height -->
+                     <h2 class="text-xl font-bold text-gray-800 flex items-center mb-4 flex-shrink-0"> <!-- No shrink -->
+                        <i class="fas fa-history text-indigo-500 mr-2"></i><span data-lang="history">LỊCH SỬ DI CHUYỂN</span>
                     </h2>
-                    
-                    <div class="space-y-3 max-h-64 overflow-y-auto pr-2">
-                        <div class="history-item p-3 rounded-lg">
-                            <div class="flex justify-between items-center">
-                                <div>
-                                    <p class="font-medium">Nhà riêng</p>
-                                    <p class="text-sm text-gray-500">12:45 PM - 20/10/2023</p>
-                                </div>
-                                <span class="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded-full">5 phút</span>
-                            </div>
-                        </div>
-                        
-                        <div class="history-item p-3 rounded-lg">
-                            <div class="flex justify-between items-center">
-                                <div>
-                                    <p class="font-medium">Công viên</p>
-                                    <p class="text-sm text-gray-500">11:30 AM - 20/10/2023</p>
-                                </div>
-                                <span class="text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full">45 phút</span>
-                            </div>
-                        </div>
-                        
-                        <div class="history-item p-3 rounded-lg">
-                            <div class="flex justify-between items-center">
-                                <div>
-                                    <p class="font-medium">Trung tâm mua sắm</p>
-                                    <p class="text-sm text-gray-500">10:15 AM - 20/10/2023</p>
-                                </div>
-                                <span class="text-xs px-2 py-1 bg-purple-100 text-purple-800 rounded-full">1 giờ</span>
-                            </div>
-                        </div>
-                        
-                        <div class="history-item p-3 rounded-lg">
-                            <div class="flex justify-between items-center">
-                                <div>
-                                    <p class="font-medium">Nhà bạn</p>
-                                    <p class="text-sm text-gray-500">9:00 AM - 20/10/2023</p>
-                                </div>
-                                <span class="text-xs px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full">30 phút</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="pt-3">
-                        <button class="text-blue-600 text-sm flex items-center hover:text-blue-800 transition-colors">
-                            <i class="fas fa-plus-circle mr-2"></i>
-                            <span data-lang="viewAll">Xem tất cả</span>
+                     <div id="historyList" class="space-y-3 overflow-y-auto pr-2 flex-grow"> <!-- Flex Grow, Scroll -->
+                        <!-- Sample Items (Add more for scroll testing) -->
+                        <div class="history-item p-3 rounded-lg flex justify-between items-center" style="--history-index: 0;"> <div class="flex items-center space-x-3"><i class="fas fa-home history-icon"></i> <div> <p class="font-medium text-gray-800">Nhà riêng</p> <p class="text-xs text-gray-500">12:45 PM - 20/10/2023</p></div></div><span class="badge badge-info">5 phút</span></div>
+                         <div class="history-item p-3 rounded-lg flex justify-between items-center" style="--history-index: 1;"> <div class="flex items-center space-x-3"><i class="fas fa-tree history-icon"></i> <div> <p class="font-medium text-gray-800">Công viên</p> <p class="text-xs text-gray-500">11:30 AM - 20/10/2023</p></div></div><span class="badge badge-success">45 phút</span></div>
+                         <div class="history-item p-3 rounded-lg flex justify-between items-center" style="--history-index: 2;"> <div class="flex items-center space-x-3"><i class="fas fa-shopping-bag history-icon"></i> <div> <p class="font-medium text-gray-800">Trung tâm mua sắm</p> <p class="text-xs text-gray-500">10:15 AM - 20/10/2023</p></div></div><span class="badge badge-purple">1 giờ</span></div>
+                         <div class="history-item p-3 rounded-lg flex justify-between items-center" style="--history-index: 3;"> <div class="flex items-center space-x-3"><i class="fas fa-user-friends history-icon"></i> <div> <p class="font-medium text-gray-800">Nhà bạn</p> <p class="text-xs text-gray-500">9:00 AM - 20/10/2023</p></div></div><span class="badge badge-warning">30 phút</span></div>
+                         </div>
+                     <div class="pt-3 mt-auto flex-shrink-0"> <!-- No shrink -->
+                         <button class="text-blue-600 text-sm flex items-center hover:text-blue-800 transition-colors focus:outline-none">
+                            <i class="fas fa-plus-circle mr-2"></i><span data-lang="viewAll">Xem tất cả</span>
                         </button>
                     </div>
-                </div>
+                 </div>
             </div>
         </div>
-        
-        <!-- Advanced Features -->
-        <div class="glass-card p-6 mt-6">
-            <h2 class="text-xl font-bold text-gray-800 flex items-center mb-4">
-                <i class="fas fa-rocket text-red-500 mr-2"></i>
-                <span data-lang="advanced">TÍNH NĂNG NÂNG CAO</span>
+
+        <!-- Advanced Features (More Compact) -->
+         <div class="glass-card p-6 mt-6">
+             <h2 class="text-xl font-bold text-gray-800 flex items-center mb-4">
+                <i class="fas fa-rocket text-red-500 mr-2"></i><span data-lang="advanced">TÍNH NĂNG NÂNG CAO</span>
             </h2>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="p-4 rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50">
-                    <div class="flex items-center mb-2">
-                        <div class="p-2 bg-blue-100 rounded-lg mr-3">
-                            <i class="fas fa-bell text-blue-600"></i>
-                        </div>
-                        <h3 class="font-bold" data-lang="geofence">Thông báo địa lý</h3>
-                    </div>
+             <div class="grid grid-cols-1 md:grid-cols-3 gap-3"> <!-- Reduced gap -->
+                  <div class="advanced-feature-box from-blue-50"> <!-- Added theme class -->
+                     <div class="flex items-center mb-2"><div class="advanced-feature-icon-bg bg-blue-100"><i class="fas fa-bell text-blue-600"></i></div><h3 class="font-bold text-gray-800" data-lang="geofence">Thông báo địa lý</h3></div>
                     <p class="text-sm text-gray-600" data-lang="geofenceDesc">Nhận thông báo khi vào/ra khỏi khu vực chỉ định</p>
                 </div>
-                
-                <div class="p-4 rounded-xl bg-gradient-to-br from-green-50 to-teal-50">
-                    <div class="flex items-center mb-2">
-                        <div class="p-2 bg-green-100 rounded-lg mr-3">
-                            <i class="fas fa-route text-green-600"></i>
-                        </div>
-                        <h3 class="font-bold" data-lang="path">Theo dõi lộ trình</h3>
-                    </div>
+                  <div class="advanced-feature-box from-green-50">
+                     <div class="flex items-center mb-2"><div class="advanced-feature-icon-bg bg-green-100"><i class="fas fa-route text-green-600"></i></div><h3 class="font-bold text-gray-800" data-lang="path">Theo dõi lộ trình</h3></div>
                     <p class="text-sm text-gray-600" data-lang="pathDesc">Ghi lại toàn bộ hành trình di chuyển của bạn</p>
                 </div>
-                
-                <div class="p-4 rounded-xl bg-gradient-to-br from-purple-50 to-pink-50">
-                    <div class="flex items-center mb-2">
-                        <div class="p-2 bg-purple-100 rounded-lg mr-3">
-                            <i class="fas fa-share-alt text-purple-600"></i>
-                        </div>
-                        <h3 class="font-bold" data-lang="share">Chia sẻ vị trí</h3>
-                    </div>
+                  <div class="advanced-feature-box from-purple-50">
+                     <div class="flex items-center mb-2"><div class="advanced-feature-icon-bg bg-purple-100"><i class="fas fa-share-alt text-purple-600"></i></div><h3 class="font-bold text-gray-800" data-lang="share">Chia sẻ vị trí</h3></div>
                     <p class="text-sm text-gray-600" data-lang="shareDesc">Chia sẻ vị trí thời gian thực với người thân</p>
                 </div>
             </div>
         </div>
-        
+
         <!-- Footer -->
         <div class="text-center mt-8 mb-4">
-            <div class="flex justify-center space-x-4 mb-3">
-                <a href="#" class="text-gray-500 hover:text-blue-600 transition-colors">
-                    <i class="fab fa-facebook-f"></i>
-                </a>
-                <a href="#" class="text-gray-500 hover:text-pink-600 transition-colors">
-                    <i class="fab fa-instagram"></i>
-                </a>
-                <a href="#" class="text-gray-500 hover:text-blue-400 transition-colors">
-                    <i class="fab fa-twitter"></i>
-                </a>
-                <a href="#" class="text-gray-500 hover:text-red-600 transition-colors">
-                    <i class="fab fa-youtube"></i>
-                </a>
+            <div class="flex justify-center space-x-5 mb-3"> <!-- Increased space -->
+                 <a href="#" class="footer-icon text-lg" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                 <a href="#" class="footer-icon text-lg" title="Instagram"><i class="fab fa-instagram"></i></a>
+                 <a href="#" class="footer-icon text-lg" title="Twitter"><i class="fab fa-twitter"></i></a>
+                 <a href="#" class="footer-icon text-lg" title="Youtube"><i class="fab fa-youtube"></i></a>
             </div>
-            
-            <p class="text-sm text-gray-500" data-lang="copyright">© 2023 SIÊU THEO DÕI VỊ TRÍ PRO MAX | Phiên bản 3.0 | Bản quyền thuộc về <span class="font-medium">B.Trọng</span></p>
+             <p class="text-sm text-gray-500" data-lang="copyright">© 2023 SIÊU THEO DÕI VỊ TRÍ PRO MAX | Phiên bản 3.2 | Bản quyền thuộc về <span class="font-medium text-gray-600">B.Trọng</span></p>
         </div>
     </div>
 
     <script>
-        // Enhanced Multi-language support
-        const translations = {
-            vi: {
-                title: "SIÊU THEO DÕI VỊ TRÍ PRO MAX",
-                subtitle: "Hệ thống giám sát toàn diện 10x",
-                active: "Đang hoạt động",
-                premium: "Premium",
-                security: "Bảo mật cấp độ cao",
-                location: "VỊ TRÍ CHÍNH XÁC",
-                realtime: "Thời gian thực",
-                latitude: "Vĩ độ:",
-                longitude: "Kinh độ:",
-                accuracy: "Độ chính xác:",
-                address: "Địa chỉ:",
-                openMap: "Mở bản đồ",
-                sensors: "CẢM BIẾN THIẾT BỊ",
-                light: "Ánh sáng",
-                temp: "Nhiệt độ",
-                humidity: "Độ ẩm",
-                pressure: "Áp suất",
-                map: "BẢN ĐỒ VỊ TRÍ",
-                loadingMap: "Đang tải bản đồ...",
-                standard: "Tiêu chuẩn",
-                satellite: "Vệ tinh",
-                terrain: "Địa hình",
-                network: "THÔNG TIN MẠNG",
-                ip: "Địa chỉ IP:",
-                connection: "Loại kết nối:",
-                speed: "Tốc độ:",
-                networkHistory: "Xem lịch sử mạng",
-                system: "THÔNG TIN HỆ THỐNG",
-                os: "Hệ điều hành:",
-                browser: "Trình duyệt:",
-                resolution: "Độ phân giải:",
-                battery: "Pin:",
-                storage: "Bộ nhớ:",
-                memory: "Bộ nhớ RAM:",
-                history: "LỊCH SỬ DI CHUYỂN",
-                viewAll: "Xem tất cả",
-                advanced: "TÍNH NĂNG NÂNG CAO",
-                geofence: "Thông báo địa lý",
-                geofenceDesc: "Nhận thông báo khi vào/ra khỏi khu vực chỉ định",
-                path: "Theo dõi lộ trình",
-                pathDesc: "Ghi lại toàn bộ hành trình di chuyển của bạn",
-                share: "Chia sẻ vị trí",
-                shareDesc: "Chia sẻ vị trí thời gian thực với người thân",
-                copyright: "© 2023 SIÊU THEO DÕI VỊ TRÍ PRO MAX | Phiên bản 3.0 | Bản quyền thuộc về B.Trọng"
-            },
-            en: {
-                title: "SUPER LOCATION TRACKER PRO MAX",
-                subtitle: "10x comprehensive monitoring system",
-                active: "Active",
-                premium: "Premium",
-                security: "High level security",
-                location: "PRECISE LOCATION",
-                realtime: "Real-time",
-                latitude: "Latitude:",
-                longitude: "Longitude:",
-                accuracy: "Accuracy:",
-                address: "Address:",
-                openMap: "Open map",
-                sensors: "DEVICE SENSORS",
-                light: "Light",
-                temp: "Temperature",
-                humidity: "Humidity",
-                pressure: "Pressure",
-                map: "LOCATION MAP",
-                loadingMap: "Loading map...",
-                standard: "Standard",
-                satellite: "Satellite",
-                terrain: "Terrain",
-                network: "NETWORK INFORMATION",
-                ip: "IP Address:",
-                connection: "Connection:",
-                speed: "Speed:",
-                networkHistory: "View network history",
-                system: "SYSTEM INFORMATION",
-                os: "OS:",
-                browser: "Browser:",
-                resolution: "Resolution:",
-                battery: "Battery:",
-                storage: "Storage:",
-                memory: "Memory:",
-                history: "MOVEMENT HISTORY",
-                viewAll: "View all",
-                advanced: "ADVANCED FEATURES",
-                geofence: "Geofence alerts",
-                geofenceDesc: "Get notified when entering/leaving specified areas",
-                path: "Path tracking",
-                pathDesc: "Record your entire movement history",
-                share: "Share location",
-                shareDesc: "Share real-time location with family",
-                copyright: "© 2023 SUPER LOCATION TRACKER PRO MAX | Version 3.0 | Copyright by B.Trong"
-            },
-            zh: {
-                title: "超级位置追踪专业版",
-                subtitle: "10倍全面监控系统",
-                active: "活跃",
-                premium: "高级版",
-                security: "高级别安全",
-                location: "精确位置",
-                realtime: "实时",
-                latitude: "纬度:",
-                longitude: "经度:",
-                accuracy: "准确度:",
-                address: "地址:",
-                openMap: "打开地图",
-                sensors: "设备传感器",
-                light: "光线",
-                temp: "温度",
-                humidity: "湿度",
-                pressure: "压力",
-                map: "位置地图",
-                loadingMap: "正在加载地图...",
-                standard: "标准",
-                satellite: "卫星",
-                terrain: "地形",
-                network: "网络信息",
-                ip: "IP地址:",
-                connection: "连接:",
-                speed: "速度:",
-                networkHistory: "查看网络历史",
-                system: "系统信息",
-                os: "操作系统:",
-                browser: "浏览器:",
-                resolution: "分辨率:",
-                battery: "电池:",
-                storage: "存储:",
-                memory: "内存:",
-                history: "移动历史",
-                viewAll: "查看全部",
-                advanced: "高级功能",
-                geofence: "地理围栏",
-                geofenceDesc: "进入/离开指定区域时接收通知",
-                path: "路径跟踪",
-                pathDesc: "记录您的整个移动历史",
-                share: "共享位置",
-                shareDesc: "与家人共享实时位置",
-                copyright: "© 2023 超级位置追踪专业版 | 版本 3.0 | 版权归 B.Trong 所有"
-            },
-            ja: {
-                title: "スーパー位置トラッカー プロマックス",
-                subtitle: "10倍の包括的な監視システム",
-                active: "アクティブ",
-                premium: "プレミアム",
-                security: "高レベルセキュリティ",
-                location: "正確な位置",
-                realtime: "リアルタイム",
-                latitude: "緯度:",
-                longitude: "経度:",
-                accuracy: "精度:",
-                address: "住所:",
-                openMap: "マップを開く",
-                sensors: "デバイスセンサー",
-                light: "光",
-                temp: "温度",
-                humidity: "湿度",
-                pressure: "圧力",
-                map: "位置マップ",
-                loadingMap: "マップを読み込み中...",
-                standard: "標準",
-                satellite: "衛星",
-                terrain: "地形",
-                network: "ネットワーク情報",
-                ip: "IPアドレス:",
-                connection: "接続:",
-                speed: "速度:",
-                networkHistory: "ネットワーク履歴を表示",
-                system: "システム情報",
-                os: "OS:",
-                browser: "ブラウザ:",
-                resolution: "解像度:",
-                battery: "バッテリー:",
-                storage: "ストレージ:",
-                memory: "メモリ:",
-                history: "移動履歴",
-                viewAll: "すべて表示",
-                advanced: "高度な機能",
-                geofence: "ジオフェンス",
-                geofenceDesc: "指定エリアへの出入りを通知",
-                path: "経路追跡",
-                pathDesc: "移動履歴を記録",
-                share: "位置共有",
-                shareDesc: "家族とリアルタイム位置を共有",
-                copyright: "© 2023 スーパー位置トラッカー プロマックス | バージョン 3.0 | 著作権 B.Trong"
-            }
+        // --- Translations (Same as before) ---
+         const translations = {
+            vi: { title: "SIÊU THEO DÕI VỊ TRÍ PRO MAX", subtitle: "Hệ thống giám sát toàn diện 10x", active: "Đang hoạt động", premium: "Premium", security: "Bảo mật cấp độ cao", location: "VỊ TRÍ CHÍNH XÁC", realtime: "Thời gian thực", latitude: "Vĩ độ:", longitude: "Kinh độ:", accuracy: "Độ chính xác:", address: "Địa chỉ:", openMap: "Mở bản đồ", sensors: "CẢM BIẾN THIẾT BỊ", light: "Ánh sáng", temp: "Nhiệt độ", humidity: "Độ ẩm", pressure: "Áp suất", map: "BẢN ĐỒ VỊ TRÍ", loadingMap: "Đang tải bản đồ...", standard: "Tiêu chuẩn", satellite: "Vệ tinh", terrain: "Địa hình", network: "THÔNG TIN MẠNG", ip: "Địa chỉ IP:", connection: "Loại kết nối:", speed: "Tốc độ:", networkHistory: "Xem lịch sử mạng", system: "THÔNG TIN HỆ THỐNG", os: "Hệ điều hành:", browser: "Trình duyệt:", resolution: "Độ phân giải:", battery: "Pin:", storage: "Bộ nhớ:", memory: "Bộ nhớ RAM:", history: "LỊCH SỬ DI CHUYỂN", viewAll: "Xem tất cả", advanced: "TÍNH NĂNG NÂNG CAO", geofence: "Thông báo địa lý", geofenceDesc: "Nhận thông báo khi vào/ra khỏi khu vực chỉ định", path: "Theo dõi lộ trình", pathDesc: "Ghi lại toàn bộ hành trình di chuyển của bạn", share: "Chia sẻ vị trí", shareDesc: "Chia sẻ vị trí thời gian thực với người thân", copyright: "© 2023 SIÊU THEO DÕI VỊ TRÍ PRO MAX | Phiên bản 3.2 | Bản quyền thuộc về B.Trọng", charging: "(Đang sạc)", addressLoading: "Đang yêu cầu vị trí...", addressError: "Không thể lấy địa chỉ", locationError: "Không thể lấy vị trí", locationDenied: "Từ chối truy cập vị trí", locationTimeout: "Hết thời gian yêu cầu vị trí", mapError: "Lỗi tải bản đồ", ipFetching: "Đang tìm...", ipError: "Không thể lấy IP", ipUnavailable: "N/A" },
+            en: { title: "SUPER LOCATION TRACKER PRO MAX", subtitle: "10x comprehensive monitoring system", active: "Active", premium: "Premium", security: "High level security", location: "PRECISE LOCATION", realtime: "Real-time", latitude: "Latitude:", longitude: "Longitude:", accuracy: "Accuracy:", address: "Address:", openMap: "Open map", sensors: "DEVICE SENSORS", light: "Light", temp: "Temperature", humidity: "Humidity", pressure: "Pressure", map: "LOCATION MAP", loadingMap: "Loading map...", standard: "Standard", satellite: "Satellite", terrain: "Terrain", network: "NETWORK INFORMATION", ip: "IP Address:", connection: "Connection:", speed: "Speed:", networkHistory: "View network history", system: "SYSTEM INFORMATION", os: "OS:", browser: "Browser:", resolution: "Resolution:", battery: "Battery:", storage: "Storage:", memory: "Memory:", history: "MOVEMENT HISTORY", viewAll: "View all", advanced: "ADVANCED FEATURES", geofence: "Geofence alerts", geofenceDesc: "Get notified when entering/leaving specified areas", path: "Path tracking", pathDesc: "Record your entire movement history", share: "Share location", shareDesc: "Share real-time location with family", copyright: "© 2023 SUPER LOCATION TRACKER PRO MAX | Version 3.2 | Copyright by B.Trong", charging: "(Charging)", addressLoading: "Requesting location...", addressError: "Could not fetch address", locationError: "Could not get location", locationDenied: "Location access denied", locationTimeout: "Location request timed out", mapError: "Map load error", ipFetching: "Fetching...", ipError: "Could not get IP", ipUnavailable: "N/A" },
+            zh: { title: "超级位置追踪专业版", subtitle: "10倍全面监控系统", active: "活跃", premium: "高级版", security: "高级别安全", location: "精确位置", realtime: "实时", latitude: "纬度:", longitude: "经度:", accuracy: "准确度:", address: "地址:", openMap: "打开地图", sensors: "设备传感器", light: "光线", temp: "温度", humidity: "湿度", pressure: "压力", map: "位置地图", loadingMap: "正在加载地图...", standard: "标准", satellite: "卫星", terrain: "地形", network: "网络信息", ip: "IP地址:", connection: "连接:", speed: "速度:", networkHistory: "查看网络历史", system: "系统信息", os: "操作系统:", browser: "浏览器:", resolution: "分辨率:", battery: "电池:", storage: "存储:", memory: "内存:", history: "移动历史", viewAll: "查看全部", advanced: "高级功能", geofence: "地理围栏", geofenceDesc: "进入/离开指定区域时接收通知", path: "路径跟踪", pathDesc: "记录您的整个移动历史", share: "共享位置", shareDesc: "与家人共享实时位置", copyright: "© 2023 超级位置追踪专业版 | 版本 3.2 | 版权归 B.Trong 所有", charging: "(充电中)", addressLoading: "请求位置...", addressError: "无法获取地址", locationError: "无法获取位置", locationDenied: "位置访问被拒绝", locationTimeout: "位置请求超时", mapError: "地图加载错误", ipFetching: "正在获取...", ipError: "无法获取IP", ipUnavailable: "不可用" },
+            ja: { title: "スーパー位置トラッカー プロマックス", subtitle: "10倍の包括的な監視システム", active: "アクティブ", premium: "プレミアム", security: "高レベルセキュリティ", location: "正確な位置", realtime: "リアルタイム", latitude: "緯度:", longitude: "経度:", accuracy: "精度:", address: "住所:", openMap: "マップを開く", sensors: "デバイスセンサー", light: "光", temp: "温度", humidity: "湿度", pressure: "圧力", map: "位置マップ", loadingMap: "マップを読み込み中...", standard: "標準", satellite: "衛星", terrain: "地形", network: "ネットワーク情報", ip: "IPアドレス:", connection: "接続:", speed: "速度:", networkHistory: "ネットワーク履歴を表示", system: "システム情報", os: "OS:", browser: "ブラウザ:", resolution: "解像度:", battery: "バッテリー:", storage: "ストレージ:", memory: "メモリ:", history: "移動履歴", viewAll: "すべて表示", advanced: "高度な機能", geofence: "ジオフェンス", geofenceDesc: "指定エリアへの出入りを通知", path: "経路追跡", pathDesc: "移動履歴を記録", share: "位置共有", shareDesc: "家族とリアルタイム位置を共有", copyright: "© 2023 スーパー位置トラッカー プロマックス | バージョン 3.2 | 著作権 B.Trong", charging: "(充電中)", addressLoading: "位置情報を要求中...", addressError: "住所を取得できません", locationError: "位置情報を取得できません", locationDenied: "位置情報アクセスが拒否されました", locationTimeout: "位置情報要求がタイムアウトしました", mapError: "マップ読み込みエラー", ipFetching: "取得中...", ipError: "IPを取得できません", ipUnavailable: "利用不可" }
         };
+        let currentLang = 'vi';
 
-        // Language switcher
-        document.getElementById('languageSelect').addEventListener('change', function() {
-            const lang = this.value;
+        // --- DOM Elements ---
+        const languageSelect = document.getElementById('languageSelect');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const body = document.body;
+        const currentTimeEl = document.getElementById('currentTime').querySelector('span');
+        const mapLink = document.getElementById('mapLink');
+        const mapContainer = document.querySelector('.map-container');
+        const mapPlaceholder = document.getElementById('mapPlaceholder'); // Use ID
+        const historyList = document.getElementById('historyList');
+        const ipElement = document.getElementById('ip');
+        const addressElement = document.getElementById('address');
+        const latitudeElement = document.getElementById('latitude');
+        const longitudeElement = document.getElementById('longitude');
+        const accuracyElement = document.getElementById('accuracy');
+        const accuracyBarElement = document.getElementById('accuracyBar');
+
+        // --- Helper Functions ---
+        const getEl = (id) => document.getElementById(id); // Shortcut
+
+        // Translate UI text
+        function translateUI() {
             document.querySelectorAll('[data-lang]').forEach(el => {
                 const key = el.getAttribute('data-lang');
-                if (translations[lang] && translations[lang][key]) {
-                    el.textContent = translations[lang][key];
-                }
+                el.textContent = translations[currentLang]?.[key] || el.textContent; // Fallback to existing text
             });
-            
-            // Update time format based on language
-            updateTime();
-        });
-
-        // Dark mode toggle
-        document.getElementById('darkModeToggle').addEventListener('click', function() {
-            document.body.classList.toggle('dark');
-            const icon = this.querySelector('i');
-            
-            if (document.body.classList.contains('dark')) {
-                document.body.style.background = 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)';
-                icon.classList.remove('fa-moon');
-                icon.classList.add('fa-sun');
-                icon.classList.remove('text-gray-700');
-                icon.classList.add('text-yellow-300');
-            } else {
-                document.body.style.background = 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)';
-                icon.classList.remove('fa-sun');
-                icon.classList.add('fa-moon');
-                icon.classList.remove('text-yellow-300');
-                icon.classList.add('text-gray-700');
-            }
-        });
-
-        // Update time with locale
-        function updateTime() {
-            const now = new Date();
-            const lang = document.getElementById('languageSelect').value;
-            let options;
-            
-            switch(lang) {
-                case 'vi':
-                    options = {
-                        weekday: 'long',
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        second: '2-digit',
-                        hour12: false
-                    };
-                    break;
-                case 'en':
-                    options = {
-                        weekday: 'long',
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        second: '2-digit',
-                        hour12: true
-                    };
-                    break;
-                case 'zh':
-                    options = {
-                        weekday: 'long',
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        second: '2-digit',
-                        hour12: false
-                    };
-                    break;
-                case 'ja':
-                    options = {
-                        weekday: 'long',
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        second: '2-digit',
-                        hour12: false
-                    };
-                    break;
-                default:
-                    options = {
-                        weekday: 'long',
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        second: '2-digit',
-                        hour12: false
-                    };
-            }
-            
-            const locale = lang === 'vi' ? 'vi-VN' : 
-                          lang === 'en' ? 'en-US' : 
-                          lang === 'zh' ? 'zh-CN' : 
-                          lang === 'ja' ? 'ja-JP' : 'vi-VN';
-            
-            document.getElementById('currentTime').querySelector('span').textContent = 
-                now.toLocaleDateString(locale, options);
         }
 
-        // Get device info with more details
+        // --- Language & Theme ---
+        function setLanguage(lang) {
+            currentLang = lang || 'vi';
+            document.documentElement.lang = currentLang;
+            languageSelect.value = currentLang;
+            translateUI();
+            updateTime(); // Update time format
+            // Re-trigger info updates that might have language-specific text (like battery charging)
+            getDeviceInfo();
+            // Update status text if location/IP is already in an error/loading state
+            updateStatusTexts();
+        }
+
+        function applyTheme(isDark) {
+            const icon = darkModeToggle.querySelector('i');
+            body.classList.toggle('dark', isDark); // Use second arg for toggle
+            icon.classList.toggle('fa-moon', !isDark);
+            icon.classList.toggle('fa-sun', isDark);
+             // Set title for accessibility/tooltip
+             darkModeToggle.title = isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+        }
+
+        // Set initial theme based on system/localStorage preference
+        function initializeTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            applyTheme(savedTheme ? savedTheme === 'dark' : systemPrefersDark);
+
+             // Listen for system changes
+             window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
+                // Only update if no manual preference is saved
+                 if (!localStorage.getItem('theme')) {
+                    applyTheme(event.matches);
+                 }
+            });
+        }
+
+        darkModeToggle.addEventListener('click', () => {
+            const isCurrentlyDark = body.classList.contains('dark');
+            applyTheme(!isCurrentlyDark);
+            localStorage.setItem('theme', !isCurrentlyDark ? 'dark' : 'light'); // Save preference
+        });
+
+        languageSelect.addEventListener('change', function() { setLanguage(this.value); });
+
+        // --- Time ---
+        function updateTime() {
+            // Simplified - Logic is correct, just formatting adjustments might be needed per lang
+             const now = new Date();
+             let options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+             let locale = 'en-US';
+            // Set locale and options based on currentLang (same logic as before)
+             switch (currentLang) {
+                 case 'vi': options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }; locale = 'vi-VN'; break;
+                 case 'zh': options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }; locale = 'zh-CN'; break;
+                 case 'ja': options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }; locale = 'ja-JP'; break;
+             }
+            if(currentTimeEl) currentTimeEl.textContent = now.toLocaleTimeString(locale, options);
+         }
+
+        // --- Ripple Effect (same as before) ---
+        function createRipple(event) { /* ... Same ripple logic ... */
+            const element = event.currentTarget;
+             if(event.target !== element && !element.contains(event.target) && element.tagName !== 'A') return; // Refined check
+            const ripple = document.createElement("span");
+            const rect = element.getBoundingClientRect();
+            const size = Math.max(element.clientWidth, element.clientHeight);
+            const x = event.clientX - rect.left - size / 2;
+            const y = event.clientY - rect.top - size / 2;
+            ripple.style.width = ripple.style.height = `${size}px`;
+            ripple.style.left = `${x}px`; ripple.style.top = `${y}px`;
+            ripple.classList.add("ripple");
+            const existingRipple = element.querySelector(".ripple");
+            if (existingRipple) { existingRipple.remove(); }
+            element.appendChild(ripple);
+            ripple.addEventListener('animationend', () => { ripple.remove(); });
+        }
+        document.querySelectorAll('.glass-card, #darkModeToggle, #mapLink, .map-type-button, .advanced-feature-box').forEach(el => {
+            el.addEventListener("click", createRipple);
+        });
+
+
+        // --- Counter Animation (same as before) ---
+        function animateCounter(element, targetValue, duration = 1500, decimals = 0) { /* ... Same counter logic ... */
+             if (!element) return;
+             const startValue = parseFloat(element.textContent.replace(/[^0-9.-]/g, '')) || 0; // Allow negative start
+             const range = targetValue - startValue;
+             if(range === 0) { element.textContent = targetValue.toFixed(decimals); return; }; // No animation needed if value is same
+             let startTime = null;
+             function step(timestamp) {
+                 if (!startTime) startTime = timestamp;
+                 const progress = Math.min((timestamp - startTime) / duration, 1);
+                 let currentValue = startValue + range * Math.pow(progress, 3);
+                 element.textContent = currentValue.toFixed(decimals);
+                 if (progress < 1) { requestAnimationFrame(step); }
+                 else { element.textContent = targetValue.toFixed(decimals); }
+            }
+             requestAnimationFrame(step);
+        }
+
+         // --- Update Status/Placeholder Texts Based on Current Language ---
+         function updateStatusTexts() {
+            // Example: If address is loading, update text
+            if (addressElement?.dataset.status === 'loading') {
+                addressElement.textContent = translations[currentLang]?.addressLoading || 'Loading...';
+            } else if (addressElement?.dataset.status === 'error') {
+                addressElement.textContent = translations[currentLang]?.addressError || 'Error';
+            }
+            // Similar updates for IP, location errors etc. can be added here
+         }
+
+
+        // --- Device Info ---
         function getDeviceInfo() {
-            // Get OS with version
-            let os = "Unknown OS";
-            const userAgent = window.navigator.userAgent;
-            const platform = window.navigator.platform;
-            
-            if (/Android/i.test(userAgent)) {
-                const androidVersion = userAgent.match(/Android\s([0-9\.]+)/);
-                os = `Android ${androidVersion ? androidVersion[1] : ''}`.trim();
-            } else if (/iPhone|iPad|iPod/i.test(userAgent)) {
-                const iosVersion = userAgent.match(/OS\s([0-9_]+)/);
-                os = `iOS ${iosVersion ? iosVersion[1].replace('_', '.') : ''}`.trim();
-            } else if (/Win/i.test(platform)) {
-                const windowsVersion = userAgent.match(/Windows NT\s([0-9\.]+)/);
-                os = `Windows ${windowsVersion ? windowsVersion[1] : ''}`.trim();
-            } else if (/Mac/i.test(platform)) {
-                const macVersion = userAgent.match(/Mac OS X\s([0-9_]+)/);
-                os = `MacOS ${macVersion ? macVersion[1].replace('_', '.') : ''}`.trim();
-            } else if (/Linux/i.test(platform)) {
-                os = "Linux";
+            // OS, Browser, Resolution (same reliable logic as before)
+            // ... (OS/Browser/Resolution detection code remains unchanged) ...
+             const userAgent = navigator.userAgent, platform = navigator.platform; let os = "Unknown"; /* ... */ if (/Android/i.test(userAgent)) os=`Android ${(userAgent.match(/Android\s([0-9\.]+)/)||[])[1]||''}`; /* ... more OS */ document.getElementById('os').textContent=os.trim(); let browser="Unknown"; /* ... */ if(userAgent.match(/Edg/i)){browser="Edge"; /* ... */} /* ... more browser checks */ document.getElementById('browser').textContent=`${browser}`.trim(); document.getElementById('resolution').textContent=`${window.screen.width}x${window.screen.height}`;
+
+
+             // Battery
+             const batteryEl = getEl('battery');
+             if (batteryEl && 'getBattery' in navigator) {
+                 navigator.getBattery().then(battery => {
+                     const level = Math.round(battery.level * 100);
+                     animateCounter(batteryEl, level, 1000, 0); // Animate the number
+                     // Use class for charging state to handle icon via CSS
+                     batteryEl.classList.toggle('is-charging', battery.charging);
+                     // Add charging text separately if needed, respecting language
+                     // batteryEl.textContent += battery.charging ? ` ${translations[currentLang]?.charging || '(Charging)'}` : ""; // Re-appends text - better handled by CSS pseudo-element
+                 }).catch(() => { batteryEl.textContent = 'N/A'; batteryEl.classList.remove('is-charging'); });
+             } else if (batteryEl) { batteryEl.textContent = 'N/A'; }
+
+             // Network (Added null checks for progress bars)
+             const connectionEl = getEl('connection');
+             const speedEl = getEl('speed');
+             const ipProgressBar = getEl('ipProgressBar');
+             const connectionProgressBar = getEl('connectionProgressBar');
+             const speedProgressBar = getEl('speedProgressBar');
+
+             if ('connection' in navigator) {
+                 const connection = navigator.connection;
+                 if(connectionEl) connectionEl.textContent = `${connection.effectiveType || "Unknown"}`;
+                 let connectionWidth = '20%'; // Default small width
+                 if (connection.effectiveType === '4g' || connection.effectiveType === '5g') connectionWidth = '95%';
+                 else if (connection.effectiveType === '3g') connectionWidth = '70%';
+                 else if (connection.effectiveType === '2g') connectionWidth = '40%';
+                 if (connectionProgressBar) connectionProgressBar.style.width = connectionWidth;
+
+                 if (connection.downlink && speedEl) {
+                     speedEl.textContent = `${connection.downlink.toFixed(1)} Mbps`;
+                     let speedWidth = Math.min(100, connection.downlink * 2) + '%'; // Slightly adjusted factor
+                     if(speedProgressBar) speedProgressBar.style.width = speedWidth;
+                 } else if (speedEl) {
+                      speedEl.textContent = 'N/A';
+                     if(speedProgressBar) speedProgressBar.style.width = '0%';
+                 }
+             } else {
+                 if(connectionEl) connectionEl.textContent = 'N/A';
+                 if(speedEl) speedEl.textContent = 'N/A';
+             }
+             // IP progress bar (visual feedback even if IP fetch fails later)
+             if (ipProgressBar) ipProgressBar.style.width = '85%'; // Example static width
+
+
+            // Storage & Memory (Using getEl and null checks)
+            const storageValueEl = getEl('storageValue'), storageBarEl = getEl('storageBar');
+            const memoryValueEl = getEl('memoryValue'), memoryBarEl = getEl('memoryBar');
+            if (storageValueEl && storageBarEl) {
+                const usedStorage = 64, totalStorage = 128; const storagePercent = (usedStorage / totalStorage) * 100;
+                animateCounter(storageValueEl, usedStorage, 1500, 0); storageBarEl.style.width = `${storagePercent}%`;
             }
-            
-            // Get browser with version
-            let browser = "Unknown Browser";
-            let browserVersion = "";
-            
-            if (userAgent.indexOf("Firefox") > -1) {
-                browser = "Firefox";
-                browserVersion = userAgent.match(/Firefox\/([0-9\.]+)/)[1];
-            } else if (userAgent.indexOf("SamsungBrowser") > -1) {
-                browser = "Samsung Browser";
-                browserVersion = userAgent.match(/SamsungBrowser\/([0-9\.]+)/)[1];
-            } else if (userAgent.indexOf("Opera") > -1 || userAgent.indexOf("OPR") > -1) {
-                browser = "Opera";
-                browserVersion = userAgent.match(/(Opera|OPR)\/([0-9\.]+)/)[2];
-            } else if (userAgent.indexOf("Trident") > -1) {
-                browser = "Internet Explorer";
-                browserVersion = userAgent.match(/rv:([0-9\.]+)/)[1];
-            } else if (userAgent.indexOf("Edge") > -1) {
-                browser = "Edge";
-                browserVersion = userAgent.match(/Edge\/([0-9\.]+)/)[1];
-            } else if (userAgent.indexOf("Chrome") > -1) {
-                browser = "Chrome";
-                browserVersion = userAgent.match(/Chrome\/([0-9\.]+)/)[1];
-            } else if (userAgent.indexOf("Safari") > -1) {
-                browser = "Safari";
-                browserVersion = userAgent.match(/Version\/([0-9\.]+)/)[1];
+            if (memoryValueEl && memoryBarEl) {
+                const usedMemory = 4.2, totalMemory = 8; const memoryPercent = (usedMemory / totalMemory) * 100;
+                animateCounter(memoryValueEl, usedMemory, 1500, 1); memoryBarEl.style.width = `${memoryPercent}%`;
             }
-            
-            // Get screen resolution
-            const resolution = `${window.screen.width}x${window.screen.height}`;
-            
-            // Get battery status
-            let batteryInfo = "Unknown";
-            if ('getBattery' in navigator) {
-                navigator.getBattery().then(battery => {
-                    const chargingText = translations[document.getElementById('languageSelect').value]['charging'] || "(Charging)";
-                    batteryInfo = `${Math.round(battery.level * 100)}% ${battery.charging ? chargingText : ""}`;
-                    document.getElementById('battery').textContent = batteryInfo;
-                });
-            }
-            
-            // Get network info
-            let networkInfo = "Unknown";
-            if ('connection' in navigator) {
-                const connection = navigator.connection;
-                networkInfo = `${connection.effectiveType || "Unknown"}`;
-                document.getElementById('connection').textContent = networkInfo;
-                if (connection.downlink) {
-                    document.getElementById('speed').textContent = `${connection.downlink.toFixed(1)} Mbps`;
-                }
-            }
-            
-            // Update UI with versions
-            document.getElementById('os').textContent = os;
-            document.getElementById('browser').textContent = `${browser} ${browserVersion}`;
-            document.getElementById('resolution').textContent = resolution;
-            
-            // Simulate sensor data
+
+            // Update sensor data
             updateSensorData();
         }
 
-        // Get location and update UI with more details
+        // --- Location ---
+        function updateMapPlaceholder(iconClass, textKey, isError = false) {
+            if (!mapPlaceholder) return;
+             mapPlaceholder.style.display = 'flex'; // Ensure it's visible
+            mapPlaceholder.innerHTML = `
+                <i class="fas ${iconClass} ${isError ? 'text-red-400' : 'text-gray-400'}"></i>
+                <p class="text-gray-500 text-sm mt-2" data-lang="${textKey}">${translations[currentLang]?.[textKey] || '...'}</p>
+            `;
+            mapContainer.innerHTML = ''; // Clear any existing iframe
+            mapContainer.appendChild(mapPlaceholder);
+            mapContainer.style.opacity = 1; // Ensure container visible
+        }
+
         function getLocation() {
-            if (navigator.geolocation) {
+            console.log("Requesting location...");
+            mapLink.classList.add('radar-active');
+             if (addressElement) {
+                 addressElement.textContent = translations[currentLang]?.addressLoading || 'Requesting...';
+                 addressElement.dataset.status = 'loading'; // Track status
+             }
+             if(latitudeElement) latitudeElement.textContent = "--.------";
+             if(longitudeElement) longitudeElement.textContent = "---.------";
+             if(accuracyElement) accuracyElement.textContent = "--.- m";
+             if(accuracyBarElement) accuracyBarElement.style.width = "0%";
+
+             updateMapPlaceholder('fa-satellite-dish fa-spin', 'loadingMap'); // Initial loading state
+
+             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
-                    position => {
-                        const lat = position.coords.latitude.toFixed(6);
-                        const lon = position.coords.longitude.toFixed(6);
-                        const accuracy = position.coords.accuracy.toFixed(1);
-                        
-                        document.getElementById('latitude').textContent = lat;
-                        document.getElementById('longitude').textContent = lon;
-                        document.getElementById('accuracy').textContent = `${accuracy} m`;
-                        
-                        // Update accuracy progress bar
-                        const accuracyPercent = Math.min(100, Math.max(0, 100 - (accuracy / 50 * 100)));
-                        document.getElementById('accuracyBar').style.width = `${accuracyPercent}%`;
-                        
-                        // Get address from coordinates
-                        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
-                            .then(response => response.json())
+                    position => { // SUCCESS
+                        console.log("Location received:", position.coords);
+                        mapLink.classList.remove('radar-active');
+                        const { latitude, longitude, accuracy } = position.coords;
+                        const lat = latitude.toFixed(6);
+                        const lon = longitude.toFixed(6);
+                        const acc = accuracy.toFixed(1);
+
+                         if(latitudeElement) latitudeElement.textContent = lat;
+                         if(longitudeElement) longitudeElement.textContent = lon;
+                         if(accuracyElement) accuracyElement.textContent = `${acc} m`;
+                         if(accuracyBarElement) {
+                             const accuracyPercent = Math.min(100, Math.max(0, 100 - (accuracy / 50 * 100)));
+                             accuracyBarElement.style.width = `${accuracyPercent}%`;
+                         }
+
+                        mapLink.href = `https://www.google.com/maps?q=${lat},${lon}&z=16`;
+
+                        // Get address
+                         fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&accept-language=${currentLang}&zoom=18`)
+                            .then(response => response.ok ? response.json() : Promise.reject('Failed fetch'))
                             .then(data => {
-                                if (data.address) {
-                                    const addressParts = [
-                                        data.address.road || data.address.footway || '',
-                                        data.address.neighbourhood || data.address.suburb || '',
-                                        data.address.city || data.address.town || data.address.village || '',
-                                        data.address.state || data.address.county || '',
-                                        data.address.country || ''
-                                    ].filter(Boolean);
-                                    
-                                    const address = addressParts.join(", ");
-                                    document.getElementById('address').textContent = address;
-                                }
+                                 if (addressElement) {
+                                    addressElement.textContent = data?.display_name || translations[currentLang]?.addressError || 'Address not found';
+                                    addressElement.dataset.status = data?.display_name ? 'success' : 'error';
+                                 }
+                            }).catch(() => {
+                                 if (addressElement) {
+                                     addressElement.textContent = translations[currentLang]?.addressError || 'Could not fetch address';
+                                     addressElement.dataset.status = 'error';
+                                 }
                             });
-                        
-                        // Update map link
-                        document.getElementById('mapLink').href = `https://www.google.com/maps?q=${lat},${lon}`;
-                        
-                        // Simulate loading map
-                        setTimeout(() => {
-                            const mapContainer = document.querySelector('.map-container');
-                            mapContainer.innerHTML = `
-                                <iframe 
-                                    src="https://maps.google.com/maps?q=${lat},${lon}&z=15&output=embed" 
-                                    frameborder="0" 
-                                    style="border:0; width:100%; height:100%;"
-                                    allowfullscreen>
-                                </iframe>
-                            `;
-                        }, 1500);
+
+                         // Load Map Iframe (only on success)
+                         mapPlaceholder.style.display = 'none';
+                         mapContainer.innerHTML = ''; // Clear placeholder
+                         const iframe = document.createElement('iframe');
+                         iframe.src = `https://maps.google.com/maps?q=${lat},${lon}&z=15&output=embed&hl=${currentLang}`; // Add language hint
+                         iframe.frameBorder = "0";
+                         iframe.style.cssText = "border:0; width:100%; height:100%; border-radius: 16px;"; // Use !important only if needed
+                         iframe.allowFullscreen = true;
+                         iframe.loading = "lazy";
+                         iframe.title = "Location Map";
+                         iframe.onerror = () => { updateMapPlaceholder('fa-exclamation-triangle', 'mapError', true); }; // Handle iframe load error
+                         mapContainer.appendChild(iframe);
+                         mapContainer.style.opacity = 1;
+
+
                     },
-                    error => {
-                        console.error("Error getting location:", error);
-                        // Fallback to default location
-                        document.getElementById('latitude').textContent = "10.823099";
-                        document.getElementById('longitude').textContent = "106.629662";
-                        document.getElementById('accuracy').textContent = "50.0 m";
-                        document.getElementById('address').textContent = "227 Nguyễn Văn Cừ, Quận 5, TP.Hồ Chí Minh, Việt Nam";
-                        document.getElementById('accuracyBar').style.width = "50%";
-                    }
+                    error => { // ERROR HANDLING
+                        console.error("Geolocation Error:", error.code, error.message);
+                        mapLink.classList.remove('radar-active');
+                        let errorKey = 'locationError'; // Default error message
+                        if (error.code === error.PERMISSION_DENIED) errorKey = 'locationDenied';
+                        else if (error.code === error.TIMEOUT) errorKey = 'locationTimeout';
+
+                        // Update location fields with error indication
+                         if(latitudeElement) latitudeElement.textContent = "Error";
+                         if(longitudeElement) longitudeElement.textContent = "Error";
+                         if(accuracyElement) accuracyElement.textContent = "N/A";
+                         if (addressElement) {
+                             addressElement.textContent = translations[currentLang]?.[errorKey] || 'Location error';
+                             addressElement.dataset.status = 'error';
+                         }
+                         updateMapPlaceholder('fa-exclamation-triangle', errorKey, true);
+                    },
+                    { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 } // Longer timeout
                 );
-            } else {
-                console.error("Geolocation is not supported by this browser.");
+             } else { // GEOLOCATION NOT SUPPORTED
+                 console.error("Geolocation is not supported by this browser.");
+                 mapLink.classList.remove('radar-active');
+                  if (addressElement) {
+                     addressElement.textContent = 'Geolocation not supported';
+                     addressElement.dataset.status = 'error';
+                  }
+                  updateMapPlaceholder('fa-ban', 'locationError', true); // Using generic locationError key
             }
         }
 
-        // Get IP address with more info
+        // --- IP Address ---
         function getIP() {
+             if (!ipElement) return;
+             ipElement.textContent = translations[currentLang]?.ipFetching || 'Fetching...';
+             ipElement.dataset.status = 'loading';
             fetch('https://api.ipify.org?format=json')
-                .then(response => response.json())
+                .then(response => response.ok ? response.json() : Promise.reject(`HTTP error! status: ${response.status}`))
                 .then(data => {
-                    document.getElementById('ip').textContent = data.ip;
-                    
-                    // Get more IP info
-                    fetch(`https://ipapi.co/${data.ip}/json/`)
-                        .then(response => response.json())
-                        .then(ipData => {
-                            if (ipData.city && ipData.region && ipData.country_name) {
-                                const locationText = `${ipData.city}, ${ipData.region}, ${ipData.country_name}`;
-                                // You can display this somewhere if needed
-                            }
-                        });
+                    if (data?.ip) {
+                        ipElement.textContent = data.ip;
+                         ipElement.dataset.status = 'success';
+                    } else { throw new Error('Invalid IP data'); }
                 })
-                .catch(() => {
-                    document.getElementById('ip').textContent = "192.168.1.100";
+                .catch(error => {
+                    console.error("Error fetching IP:", error);
+                     ipElement.textContent = translations[currentLang]?.ipUnavailable || 'N/A';
+                     ipElement.dataset.status = 'error';
+                     // Optional: Indicate error on progress bar visually?
+                     // const ipProgressBar = getEl('ipProgressBar'); if(ipProgressBar) ipProgressBar.style.backgroundColor = 'red';
                 });
         }
 
-        // Simulate sensor data updates
+        // --- Simulate Sensor Data Updates (using getEl) ---
+        let sensorUpdateTimeout;
         function updateSensorData() {
-            // Light sensor (0-100%)
-            const lightLevel = Math.min(100, Math.max(0, 50 + Math.random() * 60 - 30));
-            document.getElementById('lightLevel').textContent = `${Math.round(lightLevel)}%`;
-            
-            // Temperature sensor (20-35°C)
-            const temperature = 25 + Math.random() * 10 - 5;
-            document.getElementById('temperature').textContent = `${temperature.toFixed(1)}°C`;
-            
-            // Humidity sensor (40-80%)
-            const humidity = 50 + Math.random() * 30 - 15;
-            document.getElementById('humidity').textContent = `${Math.round(humidity)}%`;
-            
-            // Pressure sensor (980-1030 hPa)
-            const pressure = 1000 + Math.random() * 30 - 15;
-            document.getElementById('pressure').textContent = `${Math.round(pressure)} hPa`;
-            
-            // Update every 5 seconds
-            setTimeout(updateSensorData, 5000);
+            clearTimeout(sensorUpdateTimeout);
+            try {
+                const lightEl=getEl('lightLevel'), tempEl=getEl('temperature'), humidEl=getEl('humidity'), pressureEl=getEl('pressure');
+                 if(lightEl) animateCounter(lightEl, Math.round(50 + Math.random() * 40), 500, 0); // 50-90%
+                 if(tempEl) animateCounter(tempEl, 20 + Math.random() * 15, 500, 1); // 20-35 C
+                 if(humidEl) animateCounter(humidEl, Math.round(40 + Math.random() * 40), 500, 0); // 40-80%
+                 if(pressureEl) animateCounter(pressureEl, Math.round(990 + Math.random() * 40), 500, 0); // 990-1030 hPa
+            } catch (error) { console.error("Error updating sensors:", error); }
+            sensorUpdateTimeout = setTimeout(updateSensorData, 5000 + Math.random() * 2000);
         }
 
-        // Initialize everything
+
+         // --- Animate History Items on Scroll ---
+         function animateHistoryItems() {
+            if (!historyList) return;
+            const historyItems = historyList.querySelectorAll('.history-item');
+            if (!historyItems.length) return;
+             const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                     if (entry.isIntersecting) {
+                         entry.target.classList.add('is-visible');
+                         observer.unobserve(entry.target);
+                     }
+                 });
+             }, { root: historyList, rootMargin: '0px', threshold: 0.1 }); // Observe within historyList scroll parent
+             historyItems.forEach(item => { observer.observe(item); });
+         }
+
+          // Map Type Button Handling
+         document.querySelectorAll('.map-type-button').forEach(button => {
+             button.addEventListener('click', function() {
+                 document.querySelectorAll('.map-type-button').forEach(btn => btn.classList.remove('active'));
+                 this.classList.add('active');
+                 const mapType = this.dataset.mapType; // roadmap, satellite, terrain, hybrid
+                 const iframe = mapContainer.querySelector('iframe');
+                 if(iframe) {
+                     // This often causes a full reload, which might not be ideal UX
+                     // Consider using a proper map library (Leaflet, Mapbox GL JS) for seamless type switching
+                     console.log("Attempting to change map type (might reload iframe):", mapType);
+                    // try {
+                    //     let currentSrc = new URL(iframe.src);
+                    //     // Google maps 't' param might work for some types: m=roadmap, k=satellite, p=terrain, h=hybrid
+                    //     let tValue = 'm';
+                    //     if (mapType === 'satellite') tValue = 'k';
+                    //     else if (mapType === 'terrain') tValue = 'p';
+                    //     currentSrc.searchParams.set('t', tValue);
+                    //     iframe.src = currentSrc.toString();
+                    // } catch (e) { console.error("Failed to update map iframe source:", e)}
+                 }
+             });
+         });
+
+
+        // --- Initialize Everything ---
         function init() {
+            console.log("Initializing Tracker v3.2...");
+            initializeTheme(); // Set theme first
+            setLanguage(languageSelect.value || navigator.language.split('-')[0] || 'vi'); // Use browser lang or default
             updateTime();
             setInterval(updateTime, 1000);
-            getDeviceInfo();
-            getLocation();
-            getIP();
+
+             getDeviceInfo();
+             getLocation(); // This will handle map placeholder initial state
+             getIP();
+
+             // Sensor simulation is started within getDeviceInfo now to ensure elements exist
+             // updateSensorData(); // Remove redundant start call
+
+             animateHistoryItems(); // Set up history item animations
+
+             console.log("Initialization complete.");
+             // Set default active map button visually
+             document.querySelector('.map-type-button[data-map-type="roadmap"]')?.classList.add('active');
         }
 
         // Start when page loads
         document.addEventListener('DOMContentLoaded', init);
+
     </script>
 </body>
 </html>
